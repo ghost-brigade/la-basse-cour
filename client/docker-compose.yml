@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+
+  client:
+    image: node:alpine
+    volumes:
+      - ./:/app
+    working_dir: /app
+    ports:
+      - 80:3000
+    command: npm start
