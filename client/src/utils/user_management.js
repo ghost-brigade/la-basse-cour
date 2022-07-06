@@ -64,3 +64,7 @@ export const updateUser = (user) => {
 export const deleteUser = (id) => {
     return {};
 }
+
+export const getUserTitle = (user) => {
+    return <>{user.firstname} {user.lastname}</>;
+}

@@ -27,7 +27,7 @@ const Layout = (props) => {
     return (
         <>
             <aside className="app_menu">
-                <Link to='/' className="noPadding">
+                <Link to='/' className="app_menu-outside-link noPadding">
                     <img className="app_icon-site" width="50px" height="50px" src={icon_site} alt=""/>
                 </Link>
                 <nav role="navigation" className="app_menu-links">
@@ -43,7 +43,7 @@ const Layout = (props) => {
                         }
                     </ul>
                 </nav>
-                <MenuLink to="/settings">
+                <MenuLink to="/settings" className='app_menu-outside-link'>
                     <i className="fa fa-cog"></i>
                 </MenuLink>
             </aside>
@@ -52,14 +52,16 @@ const Layout = (props) => {
             <main>
                 <header className="app_header">
                     <h1>{title}</h1>
-                    <div className="app_input-icon">
-                        <input placeholder="Search"/>
-                        <i className="fa fa-search"></i>
+                    <div className="app_header-actions">
+                        <div className="app_input-icon app_header-search">
+                            <input placeholder="Search"/>
+                            <i className="fa fa-search"></i>
+                        </div>
+                        <button>
+                            <i className="fa fa-bell"></i>
+                        </button>
+                        <UserIcon img={currentUser?.img}/>
                     </div>
-                    <button>
-                        <i className="fa fa-bell"></i>
-                    </button>
-                    <UserIcon img={currentUser?.img}/>
                 </header>
 
                 <div className="app_main-content">

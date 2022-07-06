@@ -1,8 +1,12 @@
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import CurrentUserContext from '../../contexts/user/CurrentUserContext';
+import { getDiscussionTitle } from '../../utils/discussion_management';
 import OptionsWrapper from '../wrappers/OptionsWrapper';
 
 const DiscussionPreview = (props) => {
-    const {id, label, selected} = props;
+    const {currentUser} = useContext(CurrentUserContext);
+    const {discussion, selected} = props;
 
     const handleDiscussionClick = (id) => {
         props.handleDiscussionClick(id);
@@ -10,10 +14,10 @@ const DiscussionPreview = (props) => {
 
     return (
         <div 
-            onClick={() => handleDiscussionClick(id)}
+            onClick={() => handleDiscussionClick(discussion.id)}
             className={`app_card app_card-colored app_discussion-preview ${selected ? 'selected': ''}`}
         >
-            <p>{label}</p>
+            {getDiscussionTitle(discussion, currentUser)}
             <OptionsWrapper>
                 <ul>
                     <li>
