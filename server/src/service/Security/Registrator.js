@@ -1,7 +1,7 @@
 import { create } from "../../repository/UserRepository.js";
 
-const registration = (email, password, firstname, lastname) => {
-    create(email, password, firstname, lastname);
+const registration = async (email, password, firstname, lastname, technologie, schoolBranch) => {
+    return await create(email, password, firstname, lastname, technologie, schoolBranch);
 }
 
 export { registration };

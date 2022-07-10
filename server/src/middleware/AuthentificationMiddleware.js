@@ -13,14 +13,17 @@ const AuthentificationMiddleware = async (req, res, next) => {
 
     if (type !== "Bearer") {
         return Response.unauthorized(res);
-
     }
 
     const user = await checkToken(token);
 
     if (user) {
-        req.user = await UserRepository.find(user.id);
-        next();
+        try {
+            req.user = await UserRepository.find(user.id);
+            next();
+        } catch (err) {
+            Response.forbidden(res);
+        }
     } else {
         return Response.unauthorized(res);
     }

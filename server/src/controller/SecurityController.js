@@ -7,27 +7,32 @@ const login = async (req, res) => {
     }
 
     try {
-        let Authentificator = await import("../service/Security/Authenticator.js");
+        const Authentificator = await import("../service/Security/Authenticator.js");
         let jwtToken = await Authentificator.authentification(req.body.email, req.body.password);
 
         return res.json({
             'token': jwtToken
         });
     } catch (err) {
-        return Response.error(res, err.message());
+        return Response.unauthorized(res, err.message);
     }
-}
+};
 
 const register = async (req, res) => {
-    if(req.body === undefined || req.body.email === undefined || req.body.password === undefined || req.body.firstname === undefined || req.body.lastname === undefined) {
+    if(req.body === undefined || req.body.email === undefined || req.body.password === undefined || req.body.firstname === undefined || req.body.lastname === undefined || req.body.technologies === undefined || req.body.schoolBranch === undefined) {
         return Response.unprocessableEntity(res, "Missing parameters");
     }
 
     try {
-        let Registrator = await import("../service/Security/Registrator.js");
-        Registrator.registration(req.body.email, req.body.password, req.body.firstname, req.body.lastname);
+        const Registrator = await import("../service/Security/Registrator.js");
 
-        return Response.created(res, "User created");
+        let user = await Registrator.registration(req.body.email, req.body.password, req.body.firstname, req.body.lastname, req.body.technologies, req.body.schoolBranch).then(user => {
+            user.password = undefined;
+            user.deletedAt = undefined;
+            return user;
+        });
+
+        res.json(user);
     } catch (err) {
         if(err instanceof ValidationError) {
             return Response.unprocessableEntity(res, formatError(err));
@@ -35,8 +40,7 @@ const register = async (req, res) => {
             return Response.error(res, err.message);
         }
     }
-
-}
+};
 
 const formatError = (validationError) => {
     return validationError.errors.reduce((acc, error) => {
@@ -44,7 +48,6 @@ const formatError = (validationError) => {
         return acc;
     }, {});
 };
-
 
 export {
     login,

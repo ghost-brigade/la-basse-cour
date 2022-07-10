@@ -1,9 +1,9 @@
 const created = async (res, message) => {
-    res.status(201).json({message: message ?? "Resource created",});
+    return res.status(201).send(message);
 }
 
 const unprocessableEntity = async (res, message) => {
-    return res.status(422).json({ message: message ?? 'Semantic error in the request' })
+    return res.status(422).send(message);
 }
 
 const error = async (res, message) => {
@@ -13,21 +13,19 @@ const error = async (res, message) => {
 }
 
 const unauthorized = async (res, message) => {
-    return res.status(401).json({
-        message: message ?? "Unauthorized",
-    });
+    return res.status(401).send();
 }
 
 const forbidden = async (res, message) => {
-    return res.status(403).json({
-        message: message ?? "Forbidden",
-    });
+    return res.status(403).send();
 }
 
 const notFound = async (res, message) => {
-    return res.status(404).json({
-        message: message ?? "Not found",
-    });
+    return res.status(404).send();
+}
+
+const deleted = async (res, message) => {
+    return res.status(200).send();
 }
 
 export {
@@ -37,4 +35,5 @@ export {
     unauthorized,
     forbidden,
     notFound,
+    deleted
 }
