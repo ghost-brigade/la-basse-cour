@@ -4,18 +4,12 @@ import * as UserRepository from "../repository/UserRepository.js";
 const list = async (req, res) => {
     try {
         let users = (await UserRepository.findAll()).map(user => {
-            return {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt
-            }
+            user.password = undefined;
+            user.deletedAt = undefined;
+            return user;
         });
 
-        await res.json(users);
+        res.json(users);
     } catch (err) {
         Response.error(res, err.message());
     }

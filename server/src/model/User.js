@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../service/Database/SequelizeFactory.js"
-import bcryptjs from "bcryptjs";
 
 class User extends Model {}
 
@@ -58,6 +57,19 @@ User.init({
             },
         },
     },
+    technologies: {
+        type: DataTypes.JSON(),
+        allowNull: false,
+    },
+    schoolBranch: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        validate: {
+            len: {
+                min: 3,
+            },
+        },
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -73,20 +85,20 @@ User.init({
     },
 }, {
     sequelize,
-    modelName: "user"
+    modelName: "user",
 })
 
 User.addHook("beforeCreate", async (user) => {
-    let PasswordGenerator = import("../service/Security/PasswordGenerator.js");
-    user.password = (await PasswordGenerator).generate(user.password);
+    const PasswordGenerator = await import("../service/Security/PasswordGenerator.js");
+    user.password = await PasswordGenerator.generate(user.password);
 });
 
 User.addHook("beforeUpdate", async (user, { fields }) => {
     user.updatedAt = new Date();
 
     if (fields.includes("password")) {
-        let PasswordGenerator = import("../service/Security/PasswordGenerator.js");
-        user.password = (await PasswordGenerator).generate(user.password);
+        let PasswordGenerator = await import("../service/Security/PasswordGenerator.js");
+        user.password = await PasswordGenerator.generate(user.password);
     }
 });
 
