@@ -14,7 +14,7 @@ router.use(express.json());
 
 router.use(securityRouter);
 
-router.use('/user', userRouter);
+router.use('/user', AuthentificationMiddleware, userRouter);
 router.use('/message', AuthentificationMiddleware, messageRouter);
 router.use('/friend', AuthentificationMiddleware, friendRouter);
 router.use('/profile', AuthentificationMiddleware, profileRouter);

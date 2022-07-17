@@ -2,7 +2,7 @@ import {Sequelize} from "sequelize";
 import {env} from "../../../config.js";
 
 export const sequelize = new Sequelize(env.database.postgres, {
-    UseNewUrlParser: true
+    UseNewUrlParser: true,
 });
 
 sequelize.authenticate().then(() => {

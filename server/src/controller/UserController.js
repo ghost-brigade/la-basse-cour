@@ -13,7 +13,7 @@ const list = async (req, res) => {
             };
         });
 
-        await res.json(users);
+        res.json(users);
     } catch (err) {
         Response.error(res, err.message());
     }

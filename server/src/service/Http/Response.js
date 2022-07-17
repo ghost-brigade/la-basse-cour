@@ -54,4 +54,5 @@ export {
     unauthorized,
     forbidden,
     notFound,
+    deleted
 }
