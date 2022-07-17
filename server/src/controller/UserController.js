@@ -6,13 +6,11 @@ const list = async (req, res) => {
         let users = (await UserRepository.findAll()).map(user => {
             return {
                 id: user.id,
-                name: user.name,
-                email: user.email,
                 firstname: user.firstname,
                 lastname: user.lastname,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt
-            }
+                technologies: user.technologies,
+                schoolBranch: user.schoolBranch,
+            };
         });
 
         await res.json(users);

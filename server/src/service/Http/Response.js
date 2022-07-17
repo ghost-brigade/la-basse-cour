@@ -1,36 +1,53 @@
+const ok = async (res, message) => {
+    return res.status(200).json({
+        messages: message
+    })
+}
+
 const created = async (res, message) => {
-    res.status(201).json({message: message ?? "Resource created",});
+    return res.status(201).json({
+        messages: message
+    })
 }
 
 const unprocessableEntity = async (res, message) => {
-    return res.status(422).json({ message: message ?? 'Semantic error in the request' })
+    return res.status(422).json({
+        messages: message
+    })
 }
 
 const error = async (res, message) => {
-    return res.json({
+    return res.status(500).json({
         messages: message
     })
 }
 
 const unauthorized = async (res, message) => {
     return res.status(401).json({
-        message: message ?? "Unauthorized",
-    });
+        messages: message
+    })
 }
 
 const forbidden = async (res, message) => {
     return res.status(403).json({
-        message: message ?? "Forbidden",
-    });
+        messages: message
+    })
 }
 
 const notFound = async (res, message) => {
     return res.status(404).json({
-        message: message ?? "Not found",
-    });
+        messages: message
+    })
+}
+
+const deleted = async (res, message) => {
+    return res.status(200).json({
+        messages: message
+    })
 }
 
 export {
+    ok,
     created,
     unprocessableEntity,
     error,

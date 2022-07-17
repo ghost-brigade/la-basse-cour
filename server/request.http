@@ -1,0 +1,84 @@
+### Register
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+  "email": "user@test.fr",
+  "password": "myawesomepassword",
+  "firstname": "test",
+  "lastname": "test2",
+  "schoolBranch": "4IW3",
+  "technologies": ["PHP", "Javascript", "Python"]
+}
+
+### Login
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "email": "user@test.fr",
+  "password": "myawesomepassword"
+}
+
+### List all students
+GET http://localhost:3000/user
+Content-Type: application/json
+Authorization: Bearer <jwt_token>
+
+
+### Friend list
+GET http://localhost:3000/friend
+Content-Type: application/json
+Authorization: Bearer <jwt_token>
+
+
+### Add friend in pending status
+POST http://localhost:3000/friend
+Content-Type: application/json
+Authorization: Bearer <jwt_token>
+
+{
+  "addresseeId": "9f6ac5f9-60c2-4d22-8ad4-3b9f5517b5e3"
+}
+
+
+### Accept friend
+POST http://localhost:3000/friend/status
+Content-Type: application/json
+Authorization: Bearer <jwt_token>
+
+{
+  "addresseeId": "9f6ac5f9-60c2-4d22-8ad4-3b9f5517b5e3",
+  "status": "accepted"
+}
+
+
+### Reject friend
+POST http://localhost:3000/friend/status
+Content-Type: application/json
+Authorization: Bearer <jwt_token>
+
+{
+  "addresseeId": "9f6ac5f9-60c2-4d22-8ad4-3b9f5517b5e3",
+  "status": "rejected"
+}
+
+
+### Block friend
+POST http://localhost:3000/friend/block
+Content-Type: application/json
+Authorization: Bearer <jwt_token>
+
+{
+  "addresseeId": "9f6ac5f9-60c2-4d22-8ad4-3b9f5517b5e3"
+}
+
+
+### Unblock friend
+POST http://localhost:3000/friend/unblock
+Content-Type: application/json
+Authorization: Bearer <jwt_token>
+
+{
+  "addresseeId": "9f6ac5f9-60c2-4d22-8ad4-3b9f5517b5e3"
+}

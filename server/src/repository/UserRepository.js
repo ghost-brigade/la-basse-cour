@@ -33,4 +33,9 @@ const create = async (email, password, firstname, lastname) => {
     });
 }
 
-export { create, findAll, find, findByEmail }
+const update = async (user) => {
+    await User.update(user, {where: {id: user.id}});
+    return await find(user.id);
+}
+
+export { create, findAll, find, findByEmail, update };
