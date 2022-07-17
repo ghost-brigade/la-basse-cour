@@ -4,9 +4,13 @@ import * as UserRepository from "../repository/UserRepository.js";
 const list = async (req, res) => {
     try {
         let users = (await UserRepository.findAll()).map(user => {
-            user.password = undefined;
-            user.deletedAt = undefined;
-            return user;
+            return {
+                id: user.id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                technologies: user.technologies,
+                schoolBranch: user.schoolBranch,
+            };
         });
 
         res.json(users);

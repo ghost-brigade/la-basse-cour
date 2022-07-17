@@ -1,11 +1,13 @@
-const hasRolesAdmin = async (req, res, next) => {
+import {forbidden} from "../service/Http/Response.js";
+
+const hasRolesAdmin = (req, res, next) => {
     let roles = req.user.roles;
 
-    if(roles.includes('ROLE_ADMIN')) {
+    if(roles.includes('admin')) {
         next();
     } else {
-        return forbiddenResponse(res);
+        return forbidden(res);
     }
 }
 
-export default hasRolesAdmin();
+export { hasRolesAdmin };

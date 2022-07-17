@@ -1,14 +1,15 @@
 import { useContext, useState } from 'react';
 import Discussion from '../components/discussion/Discussion';
 import DiscussionPreview from '../components/discussion/DiscussionPreview';
+import DiscussionContext from '../contexts/discussion/DiscussionContext';
 import CurrentUserContext from '../contexts/user/CurrentUserContext';
 import { getDiscussionById, getDiscussions, postMessage } from '../utils/discussion_management';
 
 const DiscussionsPage = (props) => {
-    const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
+    const {currentUser} = useContext(CurrentUserContext);
+    const {selectedDiscussion, setSelectedDiscussion} = useContext(DiscussionContext);
     const [nbMessagesSent, setNbMessagesSent] = useState(0);
     const [discussions, setDiscussions] = useState(getDiscussions(currentUser));
-    const [selectedDiscussion, setSelectedDiscussion] = useState(null);
 
     const handleDiscussionClick = (id) => {
         setSelectedDiscussion(getDiscussionById(currentUser, id));
@@ -51,7 +52,7 @@ const DiscussionsPage = (props) => {
                         discussions.length 
                         ? discussions.map(
                             discussion => <DiscussionPreview 
-                                {...discussion}
+                                discussion={discussion}
                                 handleDiscussionClick={handleDiscussionClick}
                                 selected={selectedDiscussion && selectedDiscussion.id === discussion.id} 
                             />

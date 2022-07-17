@@ -20,7 +20,7 @@ Friend.init({
     },
     status: {
         type: DataTypes.ENUM,
-        values: ["pending", "accepted", "rejected"],
+        values: ["pending", "accepted", "rejected", "blocked"],
         defaultValue: "pending"
     },
     createdAt: {

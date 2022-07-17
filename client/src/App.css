@@ -49,9 +49,10 @@
 
 #root {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column-reverse;
   background-color: var(--color_background);
-  color: var(--color_text);
+  color: var(--color_text);  
+  min-height: 100vh;
 }
 ul {
   padding: 0;
@@ -123,14 +124,12 @@ a, a:hover {
 aside.app_menu {
   position: -webkit-sticky;
   position: sticky;
-  top: 0;
+  bottom: 0;
   background-color: var(--color_background-secondary);
-  height: 100vh;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  z-index: 5;
+}
+aside.app_menu .app_menu-outside-link {
+  display: none;
 }
 
 aside.app_menu i {
@@ -145,8 +144,11 @@ aside.app_menu a {
 
 .app_menu-links ul {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-evenly;
   gap: 15px;
+  margin: 0;
+  padding: 5px;
 }
 
 aside img {
@@ -182,10 +184,14 @@ main .app_header {
   padding: 20px 0 10px 0;
   margin-bottom: 1em;
   background-color: var(--color_background);
-  z-index: 10;
+  z-index: 25;
 }
 main .app_header h1 {
   flex: 1;
+}
+main .app_header .app_header-actions {
+  display: flex;
+  gap: 10px;
 }
 main .app_header .app_input-icon {
   width: 100%;
@@ -194,6 +200,22 @@ main .app_header .app_input-icon {
 main .app_header button {
   width: 44px;
   height: 44px;
+}
+
+@media screen and (max-width: 610px) {
+  main .app_header h1 {
+    font-size: x-large;
+  }
+  main .app_header .app_header-search {
+    width: fit-content;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 0;
+  }
+  main .app_header .app_header-search input {
+    display: none;
+  }
 }
 
 section {
@@ -400,7 +422,7 @@ section.app_characters_grid {
   flex-direction: column;
   width: 100%;
   height: 100vh;
-  max-height: calc(100vh - 150px);
+  max-height: calc(100vh - 220px);
 }
 .app_discussion-messages {
   position: relative;
@@ -531,6 +553,7 @@ section.app_characters_grid {
 }
 
 .app_discussion-preview {
+  position: relative;
   display: flex;
   justify-content: space-between;
 }
@@ -608,7 +631,77 @@ section.app_characters_grid {
   z-index: 10;
 }
 
+.app_card-img {
+  position: relative;
+}
+.app_card-img .app_card-content {
+  position: relative;
+}
+
+.app_discussion-preview .app_user-preview img {
+  width: 30px;
+}
+
+.app_friends-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+.app_user-preview {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+.app_user-preview img {
+  border-radius: 50%;
+  max-width: 50px;
+}
+.app_user-preview h3 {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  width: 100%;
+}
+
+.app_title-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.app_friends-add-button {
+  background-color: var(--color_primary);
+  margin-left: auto;
+}
+.app_title-button {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 @media screen and (min-width: 780px) {
+  #root {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;  
+  }
+
+  aside.app_menu {
+    top: 0;
+    background-color: var(--color_background-secondary);
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  aside.app_menu .app_menu-outside-link {
+    display: inline-block;
+  }
+  .app_menu-links ul {
+    flex-direction: column;
+    padding: 0;
+  }
+
   .app_discussions-page .app_return-button {
     display: none;
   }
@@ -623,5 +716,8 @@ section.app_characters_grid {
   }
   .app_discussions-list.elementSelected .app_discussion-preview.selected {
     transform: translateX(10px);
+  }
+  .app_discussions .app_discussion {
+    max-height: calc(100vh - 150px);
   }
 }

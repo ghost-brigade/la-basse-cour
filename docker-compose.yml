@@ -9,12 +9,12 @@ services:
 #    ports:
 #      - 3000:3000
     
-  server:
-    build: ./server
-    volumes:
-      - ./server:/app
-    ports:
-      - 5000:3000
+#  server:
+#    build: ./server
+#    volumes:
+#      - ./server:/app
+#    ports:
+#      - 5000:3000
 
   mongo:
     image: mongo
@@ -50,8 +50,4 @@ services:
       
 volumes:
   postgres: 
-  mongo:
-
-volumes:
-  postgres:
   mongo:

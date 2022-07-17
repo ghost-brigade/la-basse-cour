@@ -2,6 +2,7 @@ import HomePage from '../pages/HomePage';
 import StatisticsPage from '../pages/StatisticsPage';
 import DiscussionsPage from '../pages/DiscussionsPage';
 import ProfilePage from '../pages/ProfilePage';
+import RelationsPage from '../pages/RelationsPage';
 
 export const appPages = [
     {
@@ -19,6 +20,15 @@ export const appPages = [
         label: 'Discussions',
         iconClassNames: ['fa fa-comment'], 
         element: <DiscussionsPage />,
+        visibleMenu: () => true,
+        userAccess: (user) => isConnected(user),
+    },
+    {
+        id: 'relation', 
+        path: '/relations', 
+        label: 'Relations',
+        iconClassNames: ['fa fa-users'], 
+        element: <RelationsPage />,
         visibleMenu: () => true,
         userAccess: (user) => isConnected(user),
     },

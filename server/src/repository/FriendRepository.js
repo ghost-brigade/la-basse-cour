@@ -37,6 +37,12 @@ const findAll = async (userId) => {
     return friends;
 }
 
+const update = async (requesterId, addresseeId, status) => {
+    let friend = await findByRequesterOrAddressee(requesterId, addresseeId);
+    friend.status = status;
+    await friend.save();
+}
+
 const add = async (requesterId, addresseeId) => {
     await Friend.create({
         requesterId: requesterId,
@@ -50,4 +56,4 @@ const remove = async (requesterId, addresseeId) => {
     await friend.destroy();
 }
 
-export { findAll, find, add, findByRequesterOrAddressee, remove };
+export { findAll, update, find, add, findByRequesterOrAddressee, remove };

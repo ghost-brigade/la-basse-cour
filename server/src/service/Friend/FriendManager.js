@@ -2,8 +2,7 @@ import * as friendRepository from "../../repository/FriendRepository.js";
 
 const hasFriend = async (requesterId, addresseeId) => {
     try {
-        let match = await friendRepository.findByRequesterOrAddressee(requesterId, addresseeId);
-        return true;
+        return await friendRepository.findByRequesterOrAddressee(requesterId, addresseeId);
     } catch (err) {
         return false;
     }
@@ -17,6 +16,14 @@ const removeFriend = async (requesterId, addresseeId) => {
     }
 }
 
+const statusUpdate = async (requesterId, addresseeId, status) => {
+    try {
+        return await friendRepository.update(requesterId, addresseeId, status);
+    } catch (err) {
+        throw new Error('Error updating friend status');
+    }
+}
+
 const addFriend = async (requesterId, addresseeId) => {
     try {
         return await friendRepository.add(requesterId, addresseeId);
@@ -25,4 +32,4 @@ const addFriend = async (requesterId, addresseeId) => {
     }
 }
 
-export { hasFriend, removeFriend, addFriend };
+export { hasFriend, removeFriend, addFriend, statusUpdate };
