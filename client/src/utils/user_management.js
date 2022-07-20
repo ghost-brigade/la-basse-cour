@@ -4,6 +4,8 @@ import icon_donkey from '../assets/images/profile/icon_donkey.png';
 import icon_pig from '../assets/images/profile/icon_pig.png';
 import icon_sheep from '../assets/images/profile/icon_sheep.png';
 import icon_turkey from '../assets/images/profile/icon_turkey.png';
+import { request } from './request_management';
+import jwt_decode from "jwt-decode";
 
 const users = [
     {
@@ -26,7 +28,7 @@ const users = [
         'img': icon_sheep,
         'roles': ['ROLE_ADMIN']
     }
-]
+];
 
 export const getAllProfileImages = () => {
     return [
@@ -39,21 +41,64 @@ export const getAllProfileImages = () => {
     ];
 }
 
-export const getUser = (id) => {
-    return users.find(user => user.id === id);
-    /*
-    let user = await fetch('http://localhost:3000/user')
-    .then(response => {
-        return response.json()
-    })
-    .then(data => {
-        console.log(data);
+const userFormatter = (user) => {
+    return {
+        'roles': [],
+        'img': icon_chicken,
+        ...user
+    }
+}
+
+export const login = async (credentials = {email: 'user@test.fr', password: 'myawesomepassword'}) => {
+    if (!credentials.email || !credentials.password) {
+        return null;
+    }
+    
+    const result = await request('/login', {
+        'method': 'POST',
+        'headers': {'Content-Type': 'application/json'},
+        'body': JSON.stringify(credentials)
     });
 
-    console.log(user);
+    const token = result.token;
 
-    return user;
-    */
+    if (token) {
+        localStorage.setItem('token', token);
+        return loginFromToken(token);
+    }
+
+    return null;
+}
+
+export const loginFromToken = (token) => {
+    const decodedToken = jwt_decode(token);
+    return userFormatter(decodedToken);
+}
+
+export const logout = () => {
+    localStorage.clear('token');
+
+    return true;
+}
+
+export const getUser = async (token) => {
+    if (!token) {
+        return null;
+    }
+
+    const user = await request('/user', {
+        'method': 'GET',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+    });
+
+    if (user.length) {
+        return userFormatter(user[0]);
+    }
+
+    return null;
 }
 
 export const updateUser = (user) => {

@@ -4,6 +4,7 @@ import { updateUser } from "../utils/user_management";
 import SendButton from "../components/form/SendButton";
 import UserProfileSelector from "../components/user/UserProfileSelector";
 import UserInformations from "../components/user/UserInformations";
+import DisconnectButton from "../components/user/DisconnectButton";
 
 const ProfilePage = (props) => {
     const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
@@ -35,23 +36,33 @@ const ProfilePage = (props) => {
         }
     }
 
+    const handleDisconnect = () => {
+        localStorage.clear('token');
+        setCurrentUser(null);
+    }
+
     return (
-        <form onSubmit={handleSubmit}>
-            <UserProfileSelector
-                isEditing={isEditing} 
-                actualImg={userEdited.img}
-                handleChange={handleChangeImage}
-            />
-            <div className="my-2">
-                {isEditing ? 'Modifier mes informations ': 'Informations'}
-                <UserInformations 
-                    user={userEdited} 
+        <>
+            <form onSubmit={handleSubmit}>
+                <UserProfileSelector
                     isEditing={isEditing} 
-                    handleChange={handleChangeData}
+                    actualImg={userEdited.img}
+                    handleChange={handleChangeImage}
                 />
-            </div>
-            <SendButton/>
-        </form>
+                <div className="my-2">
+                    {isEditing ? 'Modifier mes informations ': 'Informations'}
+                    <UserInformations 
+                        user={userEdited} 
+                        isEditing={isEditing} 
+                        handleChange={handleChangeData}
+                    />
+                </div>
+                <div className="app_buttons-container" style={{justifyContent: 'space-between'}}>
+                    <SendButton/>
+                    <DisconnectButton/>
+                </div>
+            </form>
+        </>
     );
 }
 

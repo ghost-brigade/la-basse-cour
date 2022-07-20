@@ -16,6 +16,9 @@ const messages = [
     {'id': 21, 'discussion': 2, 'text': 'Waaaah tu clc avec ton délire toi aussi...', 'user': 1, 'date': new Date('2022-06-30 10:05')},
 ];
 
+const discs = [];
+
+/*
 const discs = [
     {'id': 1, 'users': [
         getUser(1),
@@ -36,6 +39,7 @@ const discs = [
         getUser(3),
     ], 'label': 'Conv 4'},
 ];
+*/
 
 const canAccess = (currentUser, discussion) => {
     return discussion.users.map(user => user.id).includes(currentUser.id);

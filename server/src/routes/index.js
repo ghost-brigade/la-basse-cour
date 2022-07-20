@@ -7,10 +7,18 @@ import messageRouter from "../routes/message.js";
 import userRouter from "./user.js";
 import friendRouter from "./friend.js";
 import profileRouter from "./profile.js";
+import cors from "cors";
 
 const router = express.Router();
 
 router.use(express.json());
+
+router.use(
+    cors({
+        'origin': true,
+        'credentials': true
+    })
+);
 
 router.use(securityRouter);
 
