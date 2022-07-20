@@ -1,6 +1,16 @@
 import * as Response from "../service/Http/Response.js";
 import * as UserRepository from "../repository/UserRepository.js";
 
+const me = async (req, res) => {
+    const user = await UserRepository.find(req.user.id);
+
+    if(user) {
+        return Response.ok(res, user);
+    }
+
+    return Response.notFound(res, "User not found");
+}
+
 const update = async (req, res) => {
     const user = {};
 
@@ -12,6 +22,9 @@ const update = async (req, res) => {
                 return Response.error(res, "Email already used");
             }
         } catch (err) {
+
+            //Todo send confirmation email
+
             // if throw an error, it's because the email is not used
             user.email = req.body.email;
         }
@@ -59,5 +72,6 @@ const update = async (req, res) => {
 }
 
 export {
+    me,
     update
 };
