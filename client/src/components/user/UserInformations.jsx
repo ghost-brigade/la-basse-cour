@@ -1,11 +1,8 @@
-import { useContext, useState } from "react";
-import SendButton from "../form/SendButton";
-import UserProfileSelector from "./UserProfileSelector";
-
 const informations = [
-    {id: 'email', type: 'email', label: 'Email', visible: (user, value) => user.email === value},
-    {id: 'firstname', type: 'text', label: 'Prénom', visible: () => true},
-    {id: 'lastname', type: 'text', label: 'Nom', visible: () => true},
+    {id: 'email', type: 'email', label: 'Email', visible: (user, value) => user.email === value, editable: () => true},
+    {id: 'firstname', type: 'text', label: 'Prénom', visible: () => true, editable : () => true},
+    {id: 'lastname', type: 'text', label: 'Nom', visible: () => true, editable : () => true},
+    {id: 'schoolBranch', type: 'text', label: 'Classe', visible: () => true, editable : () => false},
 ]
 
 const UserInformations = (props) => {
@@ -13,7 +10,9 @@ const UserInformations = (props) => {
 
     return (
         <>
-            {informations.map(info => 
+            {informations
+            .filter(info => info.visible(user, user.email))
+            .map(info => 
                 isEditing
                 ? <div key={info.id} className="form-group">
                     <label htmlFor={info.id}>{info.label}</label>
@@ -22,7 +21,7 @@ const UserInformations = (props) => {
                         className="form-control" 
                         id={info.id} 
                         value={user[info.id]} 
-                        disabled={!isEditing}
+                        disabled={!isEditing || !info.editable()}
                         onChange={props.handleChange} 
                     />
                 </div>

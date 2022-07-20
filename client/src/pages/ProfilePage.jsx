@@ -5,6 +5,8 @@ import SendButton from "../components/form/SendButton";
 import UserProfileSelector from "../components/user/UserProfileSelector";
 import UserInformations from "../components/user/UserInformations";
 import DisconnectButton from "../components/user/DisconnectButton";
+import { useEffect } from "react";
+import UserInterests from "../components/user/UserInterests";
 
 const ProfilePage = (props) => {
     const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
@@ -27,18 +29,34 @@ const ProfilePage = (props) => {
         });
     }
 
-    const handleSubmit = event => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         
-        const userReturned = updateUser(userEdited);
-        if (userReturned) {
-            setCurrentUser(userReturned);
+        const editedValues = {};
+        for (const key in userEdited) {
+            if (currentUser[key] !== userEdited[key]) {
+                editedValues[key] = userEdited[key];
+            }
+        }
+
+        const user = await updateUser(currentUser, editedValues);
+        if (user) {
+            setCurrentUser(user);
         }
     }
-
-    const handleDisconnect = () => {
-        localStorage.clear('token');
-        setCurrentUser(null);
+    
+    const handleAddInterest = (interest) => {
+        const user = userEdited;
+        if (!user.technologies.includes(interest)) {
+            user.technologies.push(interest);
+        }
+        setUserEdited(user);
+    }
+    
+    const handleRemoveInterest = (interest) =>{
+        const user = userEdited;
+        user.technologies = user.technologies.filter(technology => technology !== interest);
+        setUserEdited(user);
     }
 
     return (
@@ -50,13 +68,18 @@ const ProfilePage = (props) => {
                     handleChange={handleChangeImage}
                 />
                 <div className="my-2">
-                    {isEditing ? 'Modifier mes informations ': 'Informations'}
+                    <p>{isEditing ? 'Modifier mes informations ': 'Informations'}</p>
                     <UserInformations 
                         user={userEdited} 
                         isEditing={isEditing} 
                         handleChange={handleChangeData}
                     />
                 </div>
+                <UserInterests 
+                    user={userEdited} 
+                    handleAddInterest={handleAddInterest}
+                    handleRemoveInterest={handleRemoveInterest}
+                />
                 <div className="app_buttons-container" style={{justifyContent: 'space-between'}}>
                     <SendButton/>
                     <DisconnectButton/>
