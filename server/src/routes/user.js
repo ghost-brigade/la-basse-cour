@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.get('/', UserController.list);
 
+router.get('/:id', UserController.get);
+
 export default router;

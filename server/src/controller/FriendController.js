@@ -10,9 +10,12 @@ const list = async (req, res) => {
         let friends = (await friendRepository.findAll(req.user.id)).map(friend => {
             return {
                 id: friend.id,
-                friendId: friend.requesterId === req.user.id ? friend.addresseeId : friend.requesterId,
+                friend: '/user/' + (friend.requesterId === req.user.id ? friend.addresseeId : friend.requesterId),
+                requester: friend.requesterId === req.user.id,
+                addressee: friend.addresseeId === req.user.id,
                 createdAt: friend.createdAt,
                 updatedAt: friend.updatedAt,
+                status: friend.status,
             };
         });
         res.json(friends);

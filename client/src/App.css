@@ -105,6 +105,16 @@ a, a:hover {
   background-color: var(--color_danger-hover);
 }
 
+.app_success {
+  color: var(--color_text);
+  background-color: var(--color_secondary);
+  transition: 0.5s;
+}
+.app_success:hover {
+  color: var(--color_text);
+  background-color: var(--color_secondary-hover);
+}
+
 .app_popup {
   position: absolute !important;
   display: flex;
@@ -661,7 +671,8 @@ section.app_characters_grid {
   border-radius: 1em;
   background-color: var(--color_background-secondary);
 }
-.app_profile-interest i.fa {
+.app_profile-interest i.fa,
+.icon_rounded {
   display: flex;
   align-items: center;
   justify-content: center;

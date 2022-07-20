@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import DiscussionContext from "../../contexts/discussion/DiscussionContext";
 import CurrentUserContext from "../../contexts/user/CurrentUserContext";
@@ -10,9 +10,13 @@ const UserPreview = (props) => {
     const {currentUser} = useContext(CurrentUserContext);
     const {setSelectedDiscussion} = useContext(DiscussionContext);
     const {user} = props;
-    const handleSelectDiscussion = (userId) => {
-        const discussion = getPrivateDiscussion(currentUser, userId);
+    const handleSelectDiscussion = (userIdSelected) => {
+        const discussion = getPrivateDiscussion(currentUser, userIdSelected);
         setSelectedDiscussion(discussion);
+    }
+
+    if (!user) {
+        return <></>;
     }
 
     return (
@@ -22,6 +26,7 @@ const UserPreview = (props) => {
                 <Link to={`/discussions`} onClick={() => handleSelectDiscussion(user.id)}>
                     {getUserTitle(user)}
                 </Link>
+                {props.children}
                 <OptionsWrapper>
                     <ul>
                         <li className="app_content-delete">
