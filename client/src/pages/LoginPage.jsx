@@ -1,9 +1,20 @@
-import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from "react";
 import SendButton from "../components/form/SendButton";
+import CurrentUserContext from "../contexts/user/CurrentUserContext";
+import { login } from "../utils/user_management";
+import icon_site from '../assets/images/icon_site.png';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = (props) => {
+    const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
     const [values, setValues] = useState({});
+    let navigate = useNavigate();
+
+    useEffect(() => {
+        if (currentUser) {
+            navigate('/');
+        }
+    }, []);
 
     const handleChangeForm = event => {
         const id = event.target.id;
@@ -15,11 +26,24 @@ const LoginPage = (props) => {
         });
     }
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const user = await login(values.email, values.password);
+        if (user) {
+            setCurrentUser(user);
+            navigate('/');
+        }
+    }
+
     return (
-        <main>
+        <main className="app_small-interace">
+            <div className="app_icon-container">
+                <img className="app_icon-site" width="50px" height="50px" src={icon_site} alt=""/>
+            </div>
             <div className="app_main-content">
                 <h1>Me connecter</h1>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="email">Email</label> 
                         <input 
@@ -40,9 +64,9 @@ const LoginPage = (props) => {
                             onChange={handleChangeForm}
                         />
                     </div>
-                    <Link to='/forgotten-password'>
-                        <small id="emailHelp" class="form-text text-muted">Mot de passe oublié ?</small>
-                    </Link>
+                    <a to='/forgotten-password'>
+                        <small id="emailHelp" className="form-text text-muted">Mot de passe oublié ?</small>
+                    </a>
                     <SendButton />
                 </form>
             </div>

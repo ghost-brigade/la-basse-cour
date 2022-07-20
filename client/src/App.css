@@ -13,7 +13,7 @@
   --color_secondary-hover: rgb(43, 64, 182);
 
   --color_danger: rgb(193, 73, 47);
-  --color_danger-hover: rgb(121, 44, 27);
+  --color_danger-hover: rgb(174, 58, 31);
 
   --color_gradient: radial-gradient(to right, blue, transparent);
 
@@ -90,6 +90,15 @@ a, a:hover {
 }
 .app_content-delete:hover {
   color: var(--color_danger-hover);
+}
+.app_danger {
+  color: var(--color_text);
+  background-color: var(--color_danger);
+  transition: 0.5s;
+}
+.app_danger:hover {
+  color: var(--color_text);
+  background-color: var(--color_danger-hover);
 }
 
 .app_popup {
@@ -200,6 +209,32 @@ main .app_header .app_input-icon {
 main .app_header button {
   width: 44px;
   height: 44px;
+}
+
+.app_small-interace {
+  flex: none;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: auto;
+  overflow: inherit;
+  background-color: var(--color_background-secondary-transparent);
+  padding: 1.5em;
+}
+.app_small-interace .app_icon-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-height: 50px;
+}
+.app_small-interace .app_icon-container img {
+  position: absolute;
+  top: calc(-50px - 1.5em);
+  width: 100px;
+  height: 100px;
+  background-color: var(--color_background);
+  border-radius: 50%;
+  padding: 1em;
 }
 
 @media screen and (max-width: 610px) {
@@ -364,6 +399,11 @@ button img {
 }
 .app_button-icon:hover i {
   opacity: 0.7;
+}
+
+.app_buttons-container {
+  display: flex;
+  gap: 0.5em;
 }
 
 section.app_characters_grid {  
@@ -682,6 +722,10 @@ section.app_characters_grid {
     display: flex;
     flex-direction: row;
     align-items: flex-start;  
+  }
+  
+  .app_small-interace {
+    flex: 1;
   }
 
   aside.app_menu {

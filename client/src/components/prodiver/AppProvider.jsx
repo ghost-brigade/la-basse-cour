@@ -1,11 +1,26 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
 import DiscussionContext from '../../contexts/discussion/DiscussionContext';
 import CurrentUserContext from '../../contexts/user/CurrentUserContext';
-import { getUser } from '../../utils/user_management';
+import { loginFromToken } from '../../utils/user_management';
 
 const AppProvider = (props) => {
-    const [currentUser, setCurrentUser] = useState(getUser(1));
+    const [currentUser, setCurrentUser] = useState(null);
     const [selectedDiscussion, setSelectedDiscussion] = useState(null);
+
+    useEffect(() => {
+        const tokenStored = localStorage.getItem('token');
+        if (tokenStored) {
+            handleConnect(tokenStored);
+        }
+    }, []);
+
+    const handleConnect = async (token) => {
+        const user = await loginFromToken(token);
+        if (user) {
+            setCurrentUser(user);
+        }
+    }
 
     return (
         <CurrentUserContext.Provider value={{currentUser, setCurrentUser}}>

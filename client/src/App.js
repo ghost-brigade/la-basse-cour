@@ -6,31 +6,45 @@ import LoginPage from './pages/LoginPage';
 import ForgottenPasswordPage from './pages/ForgottenPasswordPage';
 import AppProvider from './components/prodiver/AppProvider';
 import { appPages } from './utils/route_management';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import CurrentUserContext from './contexts/user/CurrentUserContext';
 
 function App() {
-  const [title, setTitle] = useState('');
-
   return (
     <>
       <AppProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />}/>
-            <Route path="/forgotten-password" element={<ForgottenPasswordPage />}/>
-            <Route path="/" element={<Layout title={title}/>}>
-              {appPages.map(page => {
-                if (page.path === '/') {
-                  return <Route index path={page.path} element={page.element} />
-                }
-                return <Route path={page.path} element={page.element} />
-              })}
-              <Route path="*" element={<NoPage />} />
-            </Route>
-          </Routes>
+          <AppRoutes/>
         </BrowserRouter>
       </AppProvider>
     </>
+  );
+}
+
+const AppRoutes = (props) => {
+  const [title, setTitle] = useState('');
+  const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
+
+  if (!currentUser) {
+    return <Routes>
+      <Route path="*" element={<LoginPage/>}/>
+    </Routes>
+  }
+
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage />}/>
+      <Route path="/forgotten-password" element={<ForgottenPasswordPage />}/>
+      <Route path="/" element={<Layout title={title}/>}>
+        {appPages.map(page => {
+          if (page.path === '/') {
+            return <Route index key={page.id} path={page.path} element={page.element} />
+          }
+          return <Route key={page.id} path={page.path} element={page.element} />
+        })}
+        <Route path="*" element={<NoPage />} />
+      </Route>
+    </Routes>
   );
 }
 

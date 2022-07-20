@@ -3,6 +3,7 @@ import StatisticsPage from '../pages/StatisticsPage';
 import DiscussionsPage from '../pages/DiscussionsPage';
 import ProfilePage from '../pages/ProfilePage';
 import RelationsPage from '../pages/RelationsPage';
+import LoginPage from '../pages/LoginPage';
 
 export const appPages = [
     {
