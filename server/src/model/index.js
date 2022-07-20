@@ -1,6 +1,7 @@
 /** Import the models */
 import User from "./User.js";
 import Friend from "./Friend.js";
+import Report from "./Report.js";
 
 export const init = () => { console.log("Initializing models"); }
 
@@ -10,4 +11,7 @@ User.hasMany(Friend, {as: "friends_addressee", foreignKey: "addresseeId", onDele
 Friend.belongsTo(User, {foreignKey: "requesterId", onDelete: "CASCADE"});
 Friend.belongsTo(User, {foreignKey: "addresseeId", onDelete: "CASCADE"});
 
-export { User, Friend };
+Report.belongsTo(User, {foreignKey: "requesterId", onDelete: "CASCADE"});
+Report.belongsTo(User, {foreignKey: "addresseeId", onDelete: "CASCADE"});
+
+export { User, Friend, Report };

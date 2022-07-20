@@ -7,7 +7,7 @@ const me = async (req, res) => {
     if(user) {
         user.password = undefined;
         user.deletedAt = undefined;
-        
+
         return Response.ok(res, user);
     }
 
