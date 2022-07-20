@@ -1,7 +1,5 @@
 const ok = async (res, message) => {
-    return res.status(200).json({
-        messages: message
-    })
+    return res.status(200).json(message)
 }
 
 const created = async (res, message) => {

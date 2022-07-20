@@ -64,15 +64,22 @@ export const login = async (credentials = {email: 'user@test.fr', password: 'mya
 
     if (token) {
         localStorage.setItem('token', token);
-        return loginFromToken(token);
+        const decodedToken = jwt_decode(token);
+        return userFormatter(decodedToken);
     }
 
     return null;
 }
 
-export const loginFromToken = (token) => {
-    const decodedToken = jwt_decode(token);
-    return userFormatter(decodedToken);
+export const loginFromToken = async (token) => {
+    const user = await request('/profile/me', {
+        'method': 'GET',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+    });
+    return userFormatter(user);
 }
 
 export const logout = () => {
@@ -82,28 +89,25 @@ export const logout = () => {
 }
 
 export const getUser = async (token) => {
-    if (!token) {
-        return null;
-    }
+    return null;
+}
 
-    const user = await request('/user', {
-        'method': 'GET',
+export const updateUser = async (currentUser, editedValues) => {
+    const token = localStorage.getItem('token');
+
+    if (!editedValues) {
+        return currentUser;
+    }
+    
+    const user = await request('/profile/update', {
+        'method': 'POST',
         'headers': {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
+        'body': JSON.stringify(editedValues)
     });
-
-    if (user.length) {
-        return userFormatter(user[0]);
-    }
-
-    return null;
-}
-
-export const updateUser = (user) => {
-    // fetch...
-    return user;
+    return userFormatter(user);
 }
 
 export const deleteUser = (id) => {
