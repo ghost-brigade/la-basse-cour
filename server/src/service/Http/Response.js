@@ -3,9 +3,7 @@ const ok = async (res, message) => {
 }
 
 const created = async (res, message) => {
-    return res.status(201).json({
-        messages: message
-    })
+    return res.status(201).json(message)
 }
 
 const unprocessableEntity = async (res, message) => {

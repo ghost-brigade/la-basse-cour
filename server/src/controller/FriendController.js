@@ -18,9 +18,9 @@ const list = async (req, res) => {
                 status: friend.status,
             };
         });
-        res.json(friends);
+        return Response.ok(res, friends)
     } catch (err) {
-        Response.error(res);
+        return Response.error(res, err.message);
     }
 }
 
@@ -38,17 +38,17 @@ const update = async (req, res) => {
 
         if(friendshipExist) {
             await friendManager.removeFriend(req.user.id, req.body.addresseeId);
-            Response.deleted(res, "Friendship removed");
-        } else {
-            let friend = await friendManager.addFriend(req.user.id, req.body.addresseeId).then(friend => {
-                friend.deletedAt = undefined;
-                return friend;
-            });
-            res.json(friend);
+            return Response.deleted(res, "Friendship removed");
         }
 
+        let friend = await friendManager.addFriend(req.user.id, req.body.addresseeId).then(friend => {
+            friend.deletedAt = undefined;
+            return friend;
+        });
+
+        return Response.created(res, friend)
     } catch (err) {
-        Response.error(res, err.message());
+        return Response.error(res, err.message);
     }
 }
 
@@ -107,10 +107,9 @@ const block = async (req, res) => {
         if(friendship) {
             await friendManager.statusUpdate(req.user.id, req.body.addresseeId, "blocked");
             return Response.ok(res, "Friendship blocked");
-        } else {
-            return Response.notFound(res, "Friendship doesn't exist");
         }
 
+        return Response.notFound(res, "Friendship doesn't exist");
     } catch (err) {
         return Response.error(res, err.message);
     }
@@ -131,10 +130,9 @@ const unblock = async (req, res) => {
         if(friendship && friendship.status === "blocked") {
             await friendManager.statusUpdate(req.user.id, req.body.addresseeId, "pending");
             return Response.ok(res, "Friendship unblocked");
-        } else {
-            return Response.notFound(res, "Friendship doesn't exist");
         }
 
+        return Response.notFound(res, "Friendship doesn't exist");
     } catch (err) {
         return Response.error(res, err.message);
     }
@@ -169,7 +167,7 @@ const report = async (req, res) => {
 
     try {
         const create = await reportRepository.create(report);
-        return Response.ok(res, create);
+        return Response.created(res, create);
     } catch (err) {
         return Response.error(res, err.message);
     }

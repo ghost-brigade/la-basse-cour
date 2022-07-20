@@ -15,22 +15,18 @@ const me = async (req, res) => {
 }
 
 const update = async (req, res) => {
-    const user = {};
+    const user = {id: req.user.id};
 
     if(req.body.email) {
         try {
             const findEmail = await UserRepository.findByEmail(req.body.email);
-
             if(findEmail) {
                 return Response.error(res, "Email already used");
             }
-        } catch (err) {
+        } catch (err) {}
 
-            //Todo send confirmation email
-
-            // if throw an error, it's because the email is not used
-            user.email = req.body.email;
-        }
+        user.email = req.body.email;
+        /* TODO: send email to user with new email */
     }
 
     if(req.body.firstname) { user.firstname = req.body.firstname; }
@@ -62,7 +58,6 @@ const update = async (req, res) => {
     }
 
     try {
-        user.id = req.user.id;
         return Response.ok(res, await UserRepository.update(user).then((user) => {
             user.password = undefined;
             user.deletedAt = undefined;

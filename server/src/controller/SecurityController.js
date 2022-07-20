@@ -10,9 +10,7 @@ const login = async (req, res) => {
         const Authentificator = await import("../service/Security/Authenticator.js");
         let jwtToken = await Authentificator.authentification(req.body.email, req.body.password);
 
-        return res.json({
-            'token': jwtToken
-        });
+        return Response.ok(res, {'token': jwtToken});
     } catch (err) {
         return Response.unauthorized(res, err.message);
     }
@@ -32,7 +30,7 @@ const register = async (req, res) => {
             return user;
         });
 
-        res.json(user);
+        return Response.created(res, user);
     } catch (err) {
         if(err instanceof ValidationError) {
             return Response.unprocessableEntity(res, formatError(err));
