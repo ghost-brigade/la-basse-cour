@@ -3,6 +3,7 @@ import * as friendRepository from "../../repository/FriendRepository.js";
 const hasFriend = async (requesterId, addresseeId) => {
     try {
         return await friendRepository.findByRequesterOrAddressee(requesterId, addresseeId);
+        //return ['accepted'].includes(friendship.status);
     } catch (err) {
         return false;
     }

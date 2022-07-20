@@ -46,7 +46,7 @@ export const changeStatusFriendship = async (userId, status) => {
 
     const token = getUserToken();
 
-    return await request('/friend', {
+    return await request('/friend/status', {
         'method': 'POST',
         'headers': {
           'Content-Type': 'application/json',

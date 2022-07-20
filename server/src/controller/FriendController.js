@@ -7,7 +7,7 @@ import * as reportRepository from "../repository/ReportRepository.js";
 
 const list = async (req, res) => {
     try {
-        let friends = (await friendRepository.findAll(req.user.id)).map(friend => {
+        const friends = (await friendRepository.findAll(req.user.id)).map(friend => {
             return {
                 id: friend.id,
                 friend: '/user/' + (friend.requesterId === req.user.id ? friend.addresseeId : friend.requesterId),
@@ -20,7 +20,7 @@ const list = async (req, res) => {
         });
         return Response.ok(res, friends)
     } catch (err) {
-        return Response.error(res, err.message);
+        return Response.ok(res, []);
     }
 }
 
@@ -81,7 +81,7 @@ const status = async (req, res) => {
             }
             if(friendship.addresseeId === req.user.id) {
                 await friendManager.statusUpdate(req.user.id, addresseeId, status);
-                return Response.ok(res, "Status updated");
+                return Response.ok(res, {message: "Status updated"});
             }
         } else {
             return Response.notFound(res, "Friendship doesn't exist");
@@ -128,7 +128,7 @@ const unblock = async (req, res) => {
         let friendship = await friendManager.hasFriend(req.user.id, req.body.addresseeId);
 
         if(friendship && friendship.status === "blocked") {
-            await friendManager.statusUpdate(req.user.id, req.body.addresseeId, "pending");
+            await friendManager.removeFriend(req.user.id, req.body.addresseeId);
             return Response.ok(res, "Friendship unblocked");
         }
 

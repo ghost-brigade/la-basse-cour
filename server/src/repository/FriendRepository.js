@@ -1,4 +1,5 @@
 import {Friend} from "../model/index.js";
+import {Op} from "sequelize";
 
 const find = async (id) => {
     let friend = await Friend.findOne({ where: { id: id } });
@@ -24,11 +25,16 @@ const findByRequesterOrAddressee = async (requesterId, addresseeId) => {
 }
 
 const findAll = async (userId) => {
+
+    /** find all friends of userId */
     let friends = await Friend.findAll({
-        $or: [
-            {requesterId: userId},
-            {addresseeId: userId}
-        ]
+        // find when userId is requesterId or addresseeId
+        where: {
+            [Op.or]: [
+                {requesterId: userId},
+                {addresseeId: userId}
+            ]
+        }
     });
 
     if(friends === null) {
