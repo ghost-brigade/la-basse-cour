@@ -20,6 +20,11 @@ Content-Type: application/json
   "password": "myawesomepassword"
 }
 
+### Return my profile information
+GET http://localhost:3000/profile/me
+Content-Type: application/json
+Authorization: Bearer <jwt_token>
+
 ### List all students
 GET http://localhost:3000/user
 Content-Type: application/json

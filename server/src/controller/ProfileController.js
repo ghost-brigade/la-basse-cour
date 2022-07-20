@@ -5,6 +5,9 @@ const me = async (req, res) => {
     const user = await UserRepository.find(req.user.id);
 
     if(user) {
+        user.password = undefined;
+        user.deletedAt = undefined;
+        
         return Response.ok(res, user);
     }
 
