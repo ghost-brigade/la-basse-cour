@@ -1,6 +1,6 @@
 const ok = async (res, message) => {
     return res.status(200).json({
-        messages: message
+        message
     })
 }
 

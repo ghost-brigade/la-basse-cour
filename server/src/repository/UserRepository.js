@@ -1,4 +1,5 @@
 import { User } from "../model/index.js";
+import { Op } from "sequelize";
 
 const find = async (id) => {
     let user = await User.findOne({ where: { id: id } });
@@ -18,8 +19,15 @@ const findByEmail = async (email) => {
     return user;
 }
 
-const findAll = async () => {
-    let users = (await User.findAll());
+const findAll = async (id) => {
+
+    let users;
+
+    if(id) {
+        users = (await User.findAll({where: {id: {[Op.ne]: id}}}));
+    } else {
+        users = (await User.findAll());
+    }
 
     if(users === null) {
         throw new Error('Users not found');

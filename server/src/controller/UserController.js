@@ -3,7 +3,7 @@ import * as UserRepository from "../repository/UserRepository.js";
 
 const list = async (req, res) => {
     try {
-        let users = (await UserRepository.findAll()).map(user => {
+        const users = (await UserRepository.findAll(req.user.id)).map(user => {
             return {
                 id: user.id,
                 firstname: user.firstname,
@@ -15,7 +15,7 @@ const list = async (req, res) => {
 
         res.json(users);
     } catch (err) {
-        Response.error(res, err.message());
+        Response.error(res, err.message);
     }
 }
 
