@@ -1,6 +1,7 @@
 import * as Response from "../service/Http/Response.js";
 import * as friendManager from "../service/Friend/FriendManager.js";
 import * as friendRepository from "../repository/FriendRepository.js";
+import * as reportRepository from "../repository/ReportRepository.js";
 
 /** Todo: add notification when friendship is accepted or rejected */
 
@@ -136,10 +137,46 @@ const unblock = async (req, res) => {
     }
 }
 
+const report = async (req, res) => {
+    if(req.body === undefined || req.body.addresseeId === undefined || req.body.reason === undefined) {
+        return Response.unprocessableEntity(res, "Missing parameters");
+    }
+
+    if(req.body.addresseeId === req.user.id) {
+        return Response.unprocessableEntity(res, "You can't report yourself");
+    }
+
+    const addresseeId      = req.body.addresseeId;
+    const reason           = req.body.reason;
+    const reasonEnum       = ["harassment", "fake_profile", "others"];
+
+    if(reasonEnum.includes(reason) === false) {
+        return Response.unprocessableEntity(res, "Invalid reason only harassment, fake_profile or others");
+    }
+
+    const report = {};
+
+    report.requesterId = req.user.id;
+    report.addresseeId = addresseeId;
+    report.reason = reason;
+
+    if(req.body.comment !== undefined) {
+        report.comment = req.body.comment;
+    }
+
+    try {
+        const create = await reportRepository.create(report);
+        return Response.ok(res, create);
+    } catch (err) {
+        return Response.error(res, err.message);
+    }
+}
+
 export {
     list,
     update,
     status,
     block,
     unblock,
+    report
 };
