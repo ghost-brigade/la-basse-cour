@@ -40,7 +40,7 @@ const FriendsList = (props) => {
                                 </div>
                                 : ''
                             }
-                            <div onClick={() => friendShip.addressee ? handleCancelFriendShip(friendShip) : handleRejectPending(friendShip)}>
+                            <div onClick={() => friendShip.addressee ? handleRejectPending(friendShip) : handleCancelFriendShip(friendShip)}>
                                 <i className="fa fa-close icon_rounded app_danger"/>
                             </div>
                         </>
