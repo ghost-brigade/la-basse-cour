@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getFriendsList } from "../../utils/relation_management";
 import UserPreview from "../user/UserPreview";
 import FriendsAddButton from "./FriendsAddButton";
 
 const FriendsList = (props) => {
-    const [friends, setFriends] = useState(
-        getFriendsList(props.user)
-    );
+    const [friends, setFriends] = useState([]);
 
-    console.log(friends);
+    useEffect(() => {
+        initFriends();
+    }, []);
+
+    const initFriends = async () => {
+        const userFriends = await getFriendsList(props.user);
+        setFriends(userFriends);
+    };
 
     return (
         <>

@@ -63,7 +63,7 @@ export const login = async (credentials = {email: 'user@test.fr', password: 'mya
     const token = result.token;
 
     if (token) {
-        localStorage.setItem('token', token);
+        setUserToken(token);
         const decodedToken = jwt_decode(token);
         return userFormatter(decodedToken);
     }
@@ -92,8 +92,15 @@ export const getUser = async (token) => {
     return null;
 }
 
+export const getUserToken = () => {
+    return localStorage.getItem('token');
+}
+export const setUserToken = (token) => {
+    localStorage.setItem('token', token);
+}
+
 export const updateUser = async (currentUser, editedValues) => {
-    const token = localStorage.getItem('token');
+    const token = getUserToken();
 
     if (!editedValues) {
         return currentUser;
