@@ -1,45 +1,69 @@
-const ok = async (res, message) => {
-    return res.status(200).json(message)
+import * as HttpLogger from "../Log/HttpLogger.js";
+
+const ok = async (req, res, message) => {
+    const response = res.status(200).json(message);
+    HttpLogger.create(req, res);
+    return response;
 }
 
-const created = async (res, message) => {
-    return res.status(201).json(message)
+const created = async (req, res, message) => {
+    const response = res.status(201).json(message);
+    HttpLogger.create(req, res);
+    return response;
 }
 
-const unprocessableEntity = async (res, message) => {
-    return res.status(422).json({
+const unprocessableEntity = async (req, res, message) => {
+    const response = res.status(422).json({
         messages: message
     })
+
+    HttpLogger.create(req, res);
+    return response;
 }
 
-const error = async (res, message) => {
-    return res.status(500).json({
+const error = async (req, res, message) => {
+    const response = res.status(500).json({
         messages: message
     })
+
+    HttpLogger.create(req, res);
+    return response;
 }
 
-const unauthorized = async (res, message) => {
-    return res.status(401).json({
+const unauthorized = async (req, res, message) => {
+    const response = res.status(401).json({
         messages: message
     })
+
+    HttpLogger.create(req, res);
+    return response;
 }
 
-const forbidden = async (res, message) => {
-    return res.status(403).json({
+const forbidden = async (req, res, message) => {
+    const response = res.status(403).json({
         messages: message
     })
+
+    HttpLogger.create(req, res);
+    return response;
 }
 
-const notFound = async (res, message) => {
-    return res.status(404).json({
+const notFound = async (req, res, message) => {
+    const response = res.status(404).json({
         messages: message
     })
+
+    HttpLogger.create(req, res);
+    return response;
 }
 
-const deleted = async (res, message) => {
-    return res.status(200).json({
+const deleted = async (req, res, message) => {
+    const response = res.status(200).json({
         messages: message
     })
+
+    HttpLogger.create(req, res);
+    return response;
 }
 
 export {

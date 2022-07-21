@@ -1,6 +1,7 @@
 import * as Response from "../service/Http/Response.js";
 import * as DiscussionManager from "../service/Discussion/DiscussionManager.js";
 import * as DiscussionRepository from "../repository/DiscussionRepository.js";
+import { ValidationError } from "sequelize";
 
 const list = async (req, res) => {
     try {
@@ -11,15 +12,15 @@ const list = async (req, res) => {
             return discussion;
         });
 
-        Response.ok(res, discussions);
+        Response.ok(req, res, discussions);
     } catch (err) {
-        Response.error(res, err.message);
+        Response.error(req, res, err.message);
     }
 }
 
 const create = async (req, res) => {
     if(req.body === undefined || req.body.users === undefined) {
-        return Response.unprocessableEntity(res, "Missing parameters");
+        return Response.unprocessableEntity(req, res, "Missing parameters");
     }
 
     try {
@@ -37,12 +38,12 @@ const create = async (req, res) => {
             return '/user/' + user;
         });
 
-        return Response.created(res, discussion);
+        return Response.created(req, res, discussion);
     } catch (err) {
         if(err instanceof ValidationError) {
-            return Response.unprocessableEntity(res, formatError(err));
+            return Response.unprocessableEntity(req, res, formatError(err));
         } else {
-            return Response.error(res, err.message);
+            return Response.error(req, res, err.message);
         }
     }
 }
