@@ -1,4 +1,5 @@
 import * as Response from "../service/Http/Response.js";
+import * as DiscussionManager from "../service/Discussion/DiscussionManager.js";
 import * as DiscussionRepository from "../repository/DiscussionRepository.js";
 
 const list = async (req, res) => {
@@ -22,7 +23,15 @@ const create = async (req, res) => {
     }
 
     try {
-        let discussion = await DiscussionRepository.create(req.body.users);
+        const users = req.body.users;
+        if (users.length === 2) {
+            let simpleDiscussionExist = await DiscussionManager.simpleDiscussionExist(users);
+            console.log(simpleDiscussionExist);
+            if (simpleDiscussionExist) {
+                return simpleDiscussionExist;
+            }
+        }
+        let discussion = await DiscussionRepository.create(users);
 
         discussion.users = discussion.users.map(user => {
             return '/user/' + user;

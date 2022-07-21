@@ -693,6 +693,8 @@ section.app_characters_grid {
 .app_discussions-list {
   width: 100%;
   min-width: 300px;
+  max-height: calc(100vh - 150px);
+  overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -804,6 +806,9 @@ section.app_characters_grid {
   }
   .app_discussions-list {
     max-width: 400px;
+  }
+  .app_discussions-list .app_discussion-preview {
+    max-width: calc(100% - 15px);
   }
   .app_discussions-list.elementSelected .app_discussion-preview {
     display: flex;
