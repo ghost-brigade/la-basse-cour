@@ -13,13 +13,7 @@ import discussionRouter from "./discussion.js";
 const router = express.Router();
 
 router.use(express.json());
-
-router.use(
-    cors({
-        'origin': true,
-        'credentials': true
-    })
-);
+router.use(cors({'origin': true, 'credentials': true}));
 
 router.use(securityRouter);
 
@@ -30,11 +24,12 @@ router.use('/profile', AuthentificationMiddleware, profileRouter);
 router.use('/discussion', AuthentificationMiddleware, discussionRouter);
 
 router.get('/test', async (req, res) => {
-    console.log(req);
+
+    return Response.ok(req, res, "DQSDEZSQF");
 });
 
 router.get('*', async (req, res) => {
-    return Response.notFound(res, "Page not found");
+    return Response.notFound(req, res, "Page not found");
 });
 
 export default router;

@@ -8,6 +8,7 @@ import AppProvider from './components/prodiver/AppProvider';
 import { appPages } from './utils/route_management';
 import { useContext, useState } from 'react';
 import CurrentUserContext from './contexts/user/CurrentUserContext';
+import RegisterPage from './pages/RegisterPage';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ const AppRoutes = (props) => {
 
   if (!currentUser) {
     return <Routes>
+      <Route path="/register" element={<RegisterPage/>}/>
       <Route path="*" element={<LoginPage/>}/>
     </Routes>
   }

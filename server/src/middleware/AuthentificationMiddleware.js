@@ -6,13 +6,13 @@ const AuthentificationMiddleware = async (req, res, next) => {
     const header = req.headers.authorization;
 
     if (!header) {
-        return Response.unauthorized(res, "No token provided");
+        return Response.unauthorized(req, res, "No token provided");
     }
 
     const [type, token] = header.split(/\s+/);
 
     if (type !== "Bearer") {
-        return Response.unauthorized(res, "Invalid token type");
+        return Response.unauthorized(req, res, "Invalid token type");
     }
 
     const user = await checkToken(token);
@@ -22,10 +22,10 @@ const AuthentificationMiddleware = async (req, res, next) => {
             req.user = await UserRepository.find(user.id);
             next();
         } catch (err) {
-            Response.forbidden(res);
+            Response.forbidden(req, res);
         }
     } else {
-        return Response.unauthorized(res, "Invalid token");
+        return Response.unauthorized(req, res, "Invalid token");
     }
 }
 

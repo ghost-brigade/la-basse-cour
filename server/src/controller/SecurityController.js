@@ -3,22 +3,22 @@ import {ValidationError} from "sequelize";
 
 const login = async (req, res) => {
     if(req.body === undefined || req.body.email === undefined || req.body.password === undefined) {
-        return Response.unprocessableEntity(res, "Missing parameters");
+        return Response.unprocessableEntity(req, res, "Missing parameters");
     }
 
     try {
         const Authentificator = await import("../service/Security/Authenticator.js");
         let jwtToken = await Authentificator.authentification(req.body.email, req.body.password);
 
-        return Response.ok(res, {'token': jwtToken});
+        return Response.ok(req, res, {'token': jwtToken});
     } catch (err) {
-        return Response.unauthorized(res, err.message);
+        return Response.unauthorized(req, res, err.message);
     }
 };
 
 const register = async (req, res) => {
     if(req.body === undefined || req.body.email === undefined || req.body.password === undefined || req.body.firstname === undefined || req.body.lastname === undefined || req.body.technologies === undefined || req.body.schoolBranch === undefined) {
-        return Response.unprocessableEntity(res, "Missing parameters");
+        return Response.unprocessableEntity(req, res, "Missing parameters");
     }
 
     try {
@@ -30,12 +30,12 @@ const register = async (req, res) => {
             return user;
         });
 
-        return Response.created(res, user);
+        return Response.created(req, res, user);
     } catch (err) {
         if(err instanceof ValidationError) {
-            return Response.unprocessableEntity(res, formatError(err));
+            return Response.unprocessableEntity(req, res, formatError(err));
         } else {
-            return Response.error(res, err.message);
+            return Response.error(req, res, err.message);
         }
     }
 };

@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import {env} from "../../../config.js";
 
-mongoose.connect(process.env.MONGO_URL || env.database.mongo, (err) => {
+mongoose.connect(env.database.mongo, (err) => {
     if (err) console.error(err);
-    else console.log("Mongoose connected");
+    else console.log("Connection has been established successfully with Mongo");
 });
+
 
 export default mongoose;

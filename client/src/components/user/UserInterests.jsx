@@ -23,23 +23,29 @@ const UserInterests = (props) => {
 
     return (
         <div className="my-2">
-            <p>Mes centres d'intérêt</p>
-            <div className="app_profile-interests-list">
-                {props.user.technologies.map(technology => <div 
-                    key={`interest_${technology}`} 
-                    id={technology}
-                    className={`app_profile-interest`}
-                >
-                    {technology} <i className="fa fa-close app_danger" onClick={handleRemoveInterest}/>
-                </div>)}
-            </div>
+            {
+                props.user.technologies.length
+                ? <>
+                    <p>Mes centres d'intérêt</p>
+                    <div className="app_profile-interests-list">
+                        {props.user.technologies.map(technology => <div 
+                            key={`interest_${technology}`} 
+                            id={technology}
+                            className={`app_profile-interest`}
+                        >
+                            {technology} <i className="fa fa-close app_danger" onClick={handleRemoveInterest}/>
+                        </div>)}
+                    </div>
+                </>
+                : ''
+            }
             <div className="form-group">
                 <label htmlFor="technologies">Choisir des intérêts supplémentaires</label>
                 <select className="form-control" id="technologies" name='technologies' onChange={handleChangeInterest}>
                     <option>Sélectionnez une technologie</option>
                     {allTechnologies.filter(technology => {
                         return !props.user.technologies.includes(technology)
-                    })
+                    }).sort()
                     .map(technology => <option key={`interest_${technology}`} value={technology}>
                         {technology}
                     </option>)}

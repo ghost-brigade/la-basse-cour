@@ -8,10 +8,10 @@ const me = async (req, res) => {
         user.password = undefined;
         user.deletedAt = undefined;
 
-        return Response.ok(res, user);
+        return Response.ok(req, res, user);
     }
 
-    return Response.notFound(res, "User not found");
+    return Response.notFound(req, res, "User not found");
 }
 
 const update = async (req, res) => {
@@ -21,7 +21,7 @@ const update = async (req, res) => {
         try {
             const findEmail = await UserRepository.findByEmail(req.body.email);
             if(findEmail) {
-                return Response.error(res, "Email already used");
+                return Response.error(req, res, "Email already used");
             }
         } catch (err) {}
 
@@ -36,7 +36,7 @@ const update = async (req, res) => {
         if(Array.isArray(req.body.technologies)) {
             user.technologies = req.body.technologies;
         } else {
-            return Response.unprocessableEntity(res, "Technologies must be an array");
+            return Response.unprocessableEntity(req, res, "Technologies must be an array");
         }
     }
 
@@ -49,22 +49,22 @@ const update = async (req, res) => {
                 user.password = req.body.newPassword;
             }
         } catch (err) {
-            return Response.error(res, err.message);
+            return Response.error(req, res, err.message);
         }
     }
 
     if(user.length === 0) {
-        return Response.unprocessableEntity(res, "No data to update");
+        return Response.unprocessableEntity(req, res, "No data to update");
     }
 
     try {
-        return Response.ok(res, await UserRepository.update(user).then((user) => {
+        return Response.ok(req, res, await UserRepository.update(user).then((user) => {
             user.password = undefined;
             user.deletedAt = undefined;
             return user;
         }));
     } catch (err) {
-        return Response.unprocessableEntity(res, err.message);
+        return Response.unprocessableEntity(req, res, err.message);
     }
 
 }

@@ -3,7 +3,7 @@ import SendButton from "../components/form/SendButton";
 import CurrentUserContext from "../contexts/user/CurrentUserContext";
 import { login } from "../utils/user_management";
 import icon_site from '../assets/images/icon_site.png';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage = (props) => {
     const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
@@ -64,10 +64,17 @@ const LoginPage = (props) => {
                             onChange={handleChangeForm}
                         />
                     </div>
-                    <a to='/forgotten-password'>
+                    <Link to='/forgotten-password'>
                         <small id="emailHelp" className="form-text text-muted">Mot de passe oublié ?</small>
-                    </a>
-                    <SendButton />
+                    </Link>
+                    <div className="app_buttons-container">
+                        <SendButton />
+                        <Link to="/register">
+                            <button type='button' className='app_button-icon'>
+                                <i className="fa fa-user-plus"/>Créer un compte
+                            </button>
+                        </Link>
+                    </div>
                 </form>
             </div>
         </main>
