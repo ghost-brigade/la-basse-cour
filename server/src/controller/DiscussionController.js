@@ -1,5 +1,6 @@
 import * as Response from "../service/Http/Response.js";
 import * as DiscussionRepository from "../repository/DiscussionRepository.js";
+import { ValidationError } from "sequelize";
 
 const list = async (req, res) => {
     try {
