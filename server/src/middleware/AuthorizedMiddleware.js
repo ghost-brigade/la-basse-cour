@@ -6,7 +6,7 @@ const hasRolesAdmin = (req, res, next) => {
     if(roles.includes('admin')) {
         next();
     } else {
-        return forbidden(res);
+        return forbidden(req, res, "You are not authorized to access this resource");
     }
 }
 

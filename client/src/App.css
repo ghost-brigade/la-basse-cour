@@ -418,6 +418,7 @@ button img {
 .app_buttons-container {
   display: flex;
   gap: 0.5em;
+  margin: 2em 0 1em 0;
 }
 
 section.app_characters_grid {  

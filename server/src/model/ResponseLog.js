@@ -1,10 +1,10 @@
-import mongoose from '../service/Database/MongoFactory.js';
+import MongoFactory from '../service/Database/MongoFactory.js';
 
-const schema = new mongoose.Schema({
-    title: String,
-    user: Object,
+const schema = new MongoFactory.Schema({
+    request: Object,
+    response: Object
 });
 
-const responseLog = new mongoose.model("responseLog", schema);
+const responseLog = new MongoFactory.model("responseLog", schema);
 
 export default responseLog;

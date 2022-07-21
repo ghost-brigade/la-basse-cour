@@ -66,7 +66,7 @@ const Message = (props) => {
                 }
             </header>
             <div className="app_message-content">{message.text}</div>
-            <footer className="app_message-date">{transformDatetoStr(message.date)}</footer>
+            <footer className="app_message-date">{transformDatetoStr(message.createdAt)}</footer>
         </div>
     )
 }

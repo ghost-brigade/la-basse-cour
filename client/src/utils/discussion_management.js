@@ -1,5 +1,6 @@
 import circle from '../assets/images/circle.jpg';
-import { getUser, getUserTitle } from './user_management';
+import { request } from './request_management';
+import { getUser, getUserTitle, getUserToken, userFormatter } from './user_management';
 
 const messages = [
     {'id': 1, 'discussion': 1, 'text': 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos deserunt illum culpa, optio, distinctio perspiciatis veritatis nobis dolorum libero, quis reprehenderit ratione? Eligendi suscipit praesentium tempora incidunt facilis ut omnis?', 'user': 1, 'date': new Date('2022-06-28 16:00')},
@@ -16,77 +17,74 @@ const messages = [
     {'id': 21, 'discussion': 2, 'text': 'Waaaah tu clc avec ton délire toi aussi...', 'user': 1, 'date': new Date('2022-06-30 10:05')},
 ];
 
-const discs = [];
-
-/*
-const discs = [
-    {'id': 1, 'users': [
-        getUser(1),
-        getUser(2),
-        getUser(3),
-    ], 'label': 'Conv 1'},
-    {'id': 2, 'users': [
-        getUser(1),
-        getUser(3),
-    ], 'label': 'Conv 2'},
-    {'id': 3, 'users': [
-        getUser(2),
-        getUser(3),
-    ], 'label': 'Conv 3'},
-    {'id': 4, 'users': [
-        getUser(1),
-        getUser(2),
-        getUser(3),
-    ], 'label': 'Conv 4'},
-];
-*/
-
 const canAccess = (currentUser, discussion) => {
     return discussion.users.map(user => user.id).includes(currentUser.id);
 }
 
-export const getDiscussions = (user) => {
-    return discs.filter(disc => canAccess(user, disc));
-}
+export const discussionFormatter = async (discussion) => {
+    if (!discussion) {
+        return null;
+    }
 
-export const getDiscussionById = (user, id) => {
-    const discussion = getDiscussions(user).find(disc => disc.id === id);
-    discussion.messages = messages.filter(message => message.discussion === id);
+    const token = getUserToken();
+
+    const users = [];
+    for (let index in discussion.users) {
+        const userLink = discussion.users[index];
+
+        const user = await request((userLink), {
+            'method': 'GET',
+            'headers': {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (user) {
+            users.push(userFormatter(user));
+        }
+    }
+
+    discussion.users = users;
+
     return discussion;
 }
 
-export const postMessage = (message) => {
-    // fetch ...
-    return message;
-}
+export const getDiscussions = async () => {
+    const token = getUserToken();
+    
+    const discussions = await request('/discussion', {
+        'method': 'GET',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+    });
 
-export const createDiscussion = (discussion) => {
-    const newDiscussion = {
-        ...discussion,
-        id: (discs.length + 1),
-    };
-    // fetch ...
-    discs.push(newDiscussion);
-    return newDiscussion;
-}
+    const discussionsFilled = [];
 
-export const getPrivateDiscussion = (currentUser, userToId) => {
-    const privateDiscussion = getDiscussions(currentUser).find(
-        disc => disc.users.length === 2 
-        && disc.users.find(user => user.id === userToId)
-        && disc.users.find(user => user.id === currentUser.id)
-    );
-    if (privateDiscussion) {
-        return privateDiscussion;
+    for (let index in discussions) {
+        const discussion = await discussionFormatter(discussions[index]);
+        if (discussion) {
+            discussionsFilled.push(discussion);
+        }
     }
 
-    return createDiscussion({
-        'users': [
-            currentUser,
-            getUser(userToId),
-        ], 
-        'label': `Private conv`,
-        'messages': [],
+    return discussionsFilled;
+}
+
+export const getPrivateDiscussion = async (currentUser, userToId) => {
+    const token = getUserToken();
+
+    return await request('/discussion/create', {
+        'method': 'POST',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        'body': JSON.stringify({
+            'users': [currentUser.id, userToId]
+        })
     });
 }
 
@@ -103,5 +101,5 @@ export const getDiscussionTitle = (discussion, currentUser) => {
         </div>;
     }
 
-    return <h3>{discussion.label ?? ''}</h3>;
+    return <h3>{discussion.label ?? 'Discussion sans nom'}</h3>;
 }

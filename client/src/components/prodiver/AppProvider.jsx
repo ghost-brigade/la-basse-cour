@@ -17,9 +17,7 @@ const AppProvider = (props) => {
 
     const handleConnect = async (token) => {
         const user = await loginFromToken(token);
-        if (user) {
-            setCurrentUser(user);
-        }
+        setCurrentUser(user);
     }
 
     return (
