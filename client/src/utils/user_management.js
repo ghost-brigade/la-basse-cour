@@ -49,6 +49,24 @@ const userFormatter = (user) => {
     }
 }
 
+export const register = async (credentials) => {
+    if (!credentials.firstname || !credentials.lastname || !credentials.email || !credentials.password || !credentials.schoolBranch || !credentials.technologies) {
+        return null;
+    }
+
+    const user = await request('/register', {
+        'method': 'POST',
+        'headers': {'Content-Type': 'application/json'},
+        'body': JSON.stringify(credentials)
+    });
+
+    if (user) {
+        return userFormatter(user);
+    }
+
+    return null;
+}
+
 export const login = async (credentials = {email: 'user@test.fr', password: 'myawesomepassword'}) => {
     if (!credentials.email || !credentials.password) {
         return null;
