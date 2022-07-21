@@ -20,7 +20,7 @@ const Discussion = (props) => {
 
     useEffect(() => {
         connectMessages(props.discussion.id);
-    }, []);
+    }, [props.discussion.id]);
 
     const connectMessages = async (discussionId) => {
         if (discussionId) {

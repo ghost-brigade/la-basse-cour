@@ -17,12 +17,6 @@ const DiscussionsPage = (props) => {
         connectDiscussion();
     }, []);
 
-    useEffect(() => {
-        if (selectedDiscussion && !selectedDiscussion.messages) {
-            selectedDiscussion.messages = [];
-        }
-    }, [selectedDiscussion]);
-
     const connectDiscussion = async () => {
         const discussionsFound = await getDiscussions();
         if (discussionsFound && discussionsFound.length) {
