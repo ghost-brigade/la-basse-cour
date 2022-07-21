@@ -6,6 +6,8 @@ const router = express.Router();
 router.get('/', MessageController.list);
 router.post('/', MessageController.create);
 
+router.get('/discussion/:id', MessageController.listDiscussion);
+
 router.get('/:id', MessageController.item);
 router.put('/:id', MessageController.update);
 router.delete('/:id', MessageController.remove);

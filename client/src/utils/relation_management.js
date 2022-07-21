@@ -1,5 +1,5 @@
 import { request } from "./request_management";
-import { getUser, getUserToken } from "./user_management";
+import { getUser, getUserToken, userFormatter } from "./user_management";
 
 const relations = [
     {user: 1, relationUser: 2, type: 'friend'},
@@ -31,7 +31,7 @@ export const getFriendsList = async () => {
             }
         });
         
-        relation.friend = userRelation;
+        relation.friend = userFormatter(userRelation);
         relationsFilled.push(relation);
     }
     

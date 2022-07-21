@@ -20,7 +20,7 @@ const DiscussionEmojiSelector = (props) => {
             className='app_discussion-emoji-selector'
         >
             <div className={'app_popup app_discussion-emoji-selector-popup ' + classPopup}>
-                {emojis.map(emoji => <span className='emoji' onClick={handleAddEmoji}>{emoji}</span>)}
+                {emojis.map(emoji => <span key={`emoji_${emoji}`} className='emoji' onClick={handleAddEmoji}>{emoji}</span>)}
             </div>
             <img src={icon_emoji} className='icon' onClick={togglePopup}/>
         </DetectCloseWrapper>

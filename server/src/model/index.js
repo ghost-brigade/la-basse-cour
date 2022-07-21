@@ -2,6 +2,9 @@
 import User from "./User.js";
 import Friend from "./Friend.js";
 import Report from "./Report.js";
+import Discussion from "./Discussion.js";
+import Message from "./Message.js";
+import ResponseLog from "./ResponseLog.js";
 
 export const init = () => { console.log("Initializing models"); }
 
@@ -14,4 +17,4 @@ Friend.belongsTo(User, {foreignKey: "addresseeId", onDelete: "CASCADE"});
 Report.belongsTo(User, {foreignKey: "requesterId", onDelete: "CASCADE"});
 Report.belongsTo(User, {foreignKey: "addresseeId", onDelete: "CASCADE"});
 
-export { User, Friend, Report };
+export { User, Friend, Report, Discussion, Message, ResponseLog };

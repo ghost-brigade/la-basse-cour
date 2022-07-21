@@ -18,27 +18,27 @@ const list = async (req, res) => {
                 status: friend.status,
             };
         });
-        return Response.ok(res, friends)
+        return Response.ok(req, res, friends)
     } catch (err) {
-        return Response.ok(res, []);
+        return Response.ok(req, res, []);
     }
 }
 
 const update = async (req, res) => {
     if(req.body === undefined || req.body.addresseeId === undefined) {
-        return Response.unprocessableEntity(res, "Missing parameters");
+        return Response.unprocessableEntity(req, res, "Missing parameters");
     }
 
     if(req.body.addresseeId === req.user.id) {
-        return Response.unprocessableEntity(res, "You can't add yourself as a friend");
+        return Response.unprocessableEntity(req, res, "You can't add yourself as a friend");
     }
 
     try {
         let friendshipExist = await friendManager.hasFriend(req.user.id, req.body.addresseeId);
-
+        
         if(friendshipExist) {
             await friendManager.removeFriend(req.user.id, req.body.addresseeId);
-            return Response.deleted(res, "Friendship removed");
+            return Response.deleted(req, res, "Friendship removed");
         }
 
         let friend = await friendManager.addFriend(req.user.id, req.body.addresseeId).then(friend => {
@@ -46,15 +46,15 @@ const update = async (req, res) => {
             return friend;
         });
 
-        return Response.created(res, friend)
+        return Response.created(req, res, friend)
     } catch (err) {
-        return Response.error(res, err.message);
+        return Response.error(req, res, err.message);
     }
 }
 
 const status = async (req, res) => {
     if(req.body === undefined || req.body.addresseeId === undefined || req.body.status === undefined) {
-        return Response.unprocessableEntity(res, "Missing parameters");
+        return Response.unprocessableEntity(req, res, "Missing parameters");
     }
 
     const addresseeId      = req.body.addresseeId;
@@ -62,11 +62,11 @@ const status = async (req, res) => {
     const statusEnum       = ["accepted", "rejected"];
 
     if(addresseeId === req.user.id) {
-        return Response.unprocessableEntity(res, "You can't accept yourself as a friend");
+        return Response.unprocessableEntity(req, res, "You can't accept yourself as a friend");
     }
 
     if(statusEnum.includes(status) === false) {
-        return Response.unprocessableEntity(res, "Invalid status only accepted or rejected");
+        return Response.unprocessableEntity(req, res, "Invalid status only accepted or rejected");
     }
 
     try {
@@ -74,31 +74,31 @@ const status = async (req, res) => {
 
         if(friendship) {
             if(friendship.requesterId === req.user.id) {
-                return Response.unprocessableEntity(res, "You can't accept your friend request");
+                return Response.unprocessableEntity(req, res, "You can't accept your friend request");
             }
             if(statusEnum.includes(friendship.status)) {
-                return Response.unprocessableEntity(res, "Friendship already accepted or rejected");
+                return Response.unprocessableEntity(req, res, "Friendship already accepted or rejected");
             }
             if(friendship.addresseeId === req.user.id) {
                 await friendManager.statusUpdate(req.user.id, addresseeId, status);
-                return Response.ok(res, {message: "Status updated"});
+                return Response.ok(req, res, {message: "Status updated"});
             }
         } else {
-            return Response.notFound(res, "Friendship doesn't exist");
+            return Response.notFound(req, res, "Friendship doesn't exist");
         }
 
     } catch (err) {
-        return Response.error(res, err.message);
+        return Response.error(req, res, err.message);
     }
 }
 
 const block = async (req, res) => {
     if(req.body === undefined || req.body.addresseeId === undefined) {
-        return Response.unprocessableEntity(res, "Missing parameters");
+        return Response.unprocessableEntity(req, res, "Missing parameters");
     }
 
     if(req.body.addresseeId === req.user.id) {
-        return Response.unprocessableEntity(res, "You can't block yourself");
+        return Response.unprocessableEntity(req, res, "You can't block yourself");
     }
 
     try {
@@ -106,22 +106,22 @@ const block = async (req, res) => {
 
         if(friendship) {
             await friendManager.statusUpdate(req.user.id, req.body.addresseeId, "blocked");
-            return Response.ok(res, "Friendship blocked");
+            return Response.ok(req, res, "Friendship blocked");
         }
 
-        return Response.notFound(res, "Friendship doesn't exist");
+        return Response.notFound(req, res, "Friendship doesn't exist");
     } catch (err) {
-        return Response.error(res, err.message);
+        return Response.error(req, res, err.message);
     }
 }
 
 const unblock = async (req, res) => {
     if(req.body === undefined || req.body.addresseeId === undefined) {
-        return Response.unprocessableEntity(res, "Missing parameters");
+        return Response.unprocessableEntity(req, res, "Missing parameters");
     }
 
     if(req.body.addresseeId === req.user.id) {
-        return Response.unprocessableEntity(res, "You can't block yourself");
+        return Response.unprocessableEntity(req, res, "You can't block yourself");
     }
 
     try {
@@ -129,22 +129,22 @@ const unblock = async (req, res) => {
 
         if(friendship && friendship.status === "blocked") {
             await friendManager.removeFriend(req.user.id, req.body.addresseeId);
-            return Response.ok(res, "Friendship unblocked");
+            return Response.ok(req, res, "Friendship unblocked");
         }
 
-        return Response.notFound(res, "Friendship doesn't exist");
+        return Response.notFound(req, res, "Friendship doesn't exist");
     } catch (err) {
-        return Response.error(res, err.message);
+        return Response.error(req, res, err.message);
     }
 }
 
 const report = async (req, res) => {
     if(req.body === undefined || req.body.addresseeId === undefined || req.body.reason === undefined) {
-        return Response.unprocessableEntity(res, "Missing parameters");
+        return Response.unprocessableEntity(req, res, "Missing parameters");
     }
 
     if(req.body.addresseeId === req.user.id) {
-        return Response.unprocessableEntity(res, "You can't report yourself");
+        return Response.unprocessableEntity(req, res, "You can't report yourself");
     }
 
     const addresseeId      = req.body.addresseeId;
@@ -152,7 +152,7 @@ const report = async (req, res) => {
     const reasonEnum       = ["harassment", "fake_profile", "others"];
 
     if(reasonEnum.includes(reason) === false) {
-        return Response.unprocessableEntity(res, "Invalid reason only harassment, fake_profile or others");
+        return Response.unprocessableEntity(req, res, "Invalid reason only harassment, fake_profile or others");
     }
 
     const report = {};
@@ -167,9 +167,9 @@ const report = async (req, res) => {
 
     try {
         const create = await reportRepository.create(report);
-        return Response.created(res, create);
+        return Response.created(req, res, create);
     } catch (err) {
-        return Response.error(res, err.message);
+        return Response.error(req, res, err.message);
     }
 }
 
