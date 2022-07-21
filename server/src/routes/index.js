@@ -8,6 +8,7 @@ import messageRouter from "../routes/message.js";
 import userRouter from "./user.js";
 import friendRouter from "./friend.js";
 import profileRouter from "./profile.js";
+import discussionRouter from "./discussion.js";
 
 const router = express.Router();
 
@@ -26,6 +27,7 @@ router.use('/user', AuthentificationMiddleware, userRouter);
 router.use('/message', AuthentificationMiddleware, messageRouter);
 router.use('/friend', AuthentificationMiddleware, friendRouter);
 router.use('/profile', AuthentificationMiddleware, profileRouter);
+router.use('/discussion', AuthentificationMiddleware, discussionRouter);
 
 router.get('/test', async (req, res) => {
     console.log(req);

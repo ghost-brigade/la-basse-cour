@@ -35,7 +35,7 @@ const update = async (req, res) => {
 
     try {
         let friendshipExist = await friendManager.hasFriend(req.user.id, req.body.addresseeId);
-
+        
         if(friendshipExist) {
             await friendManager.removeFriend(req.user.id, req.body.addresseeId);
             return Response.deleted(res, "Friendship removed");

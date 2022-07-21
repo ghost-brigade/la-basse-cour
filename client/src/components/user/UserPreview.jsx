@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DiscussionContext from "../../contexts/discussion/DiscussionContext";
 import CurrentUserContext from "../../contexts/user/CurrentUserContext";
 import { getPrivateDiscussion } from "../../utils/discussion_management";
@@ -7,12 +7,18 @@ import { getUserTitle } from "../../utils/user_management";
 import OptionsWrapper from "../wrappers/OptionsWrapper";
 
 const UserPreview = (props) => {
+    const navigate = useNavigate();
     const {currentUser} = useContext(CurrentUserContext);
     const {setSelectedDiscussion} = useContext(DiscussionContext);
     const {user} = props;
-    const handleSelectDiscussion = (userIdSelected) => {
-        const discussion = getPrivateDiscussion(currentUser, userIdSelected);
-        setSelectedDiscussion(discussion);
+    
+    const handleSelectDiscussion = async (userIdSelected) => {
+        const discussion = await getPrivateDiscussion(currentUser, userIdSelected);
+
+        if (discussion) {
+            setSelectedDiscussion(discussion);
+            navigate('/discussions');
+        }
     }
 
     if (!user) {
@@ -23,9 +29,9 @@ const UserPreview = (props) => {
         <div className="app_card app_user-preview">
             <img src={user.img} alt=''/>
             <h3 className="app_title-wrapper">
-                <Link to={`/discussions`} onClick={() => handleSelectDiscussion(user.id)}>
+                <div onClick={() => handleSelectDiscussion(user.id)}>
                     {getUserTitle(user)}
-                </Link>
+                </div>
                 {props.children}
                 <OptionsWrapper>
                     <ul>

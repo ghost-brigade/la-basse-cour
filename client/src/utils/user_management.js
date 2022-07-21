@@ -7,29 +7,6 @@ import icon_turkey from '../assets/images/profile/icon_turkey.png';
 import { request } from './request_management';
 import jwt_decode from "jwt-decode";
 
-const users = [
-    {
-        'id': 1, 
-        'firstname': 'Louis', 
-        'lastname': 'Moulion',
-        'img': icon_donkey,
-        'roles': ['ROLE_ADMIN']
-    },
-    {
-        'id': 2, 
-        'firstname': 'Antho', 
-        'lastname': 'ArjonA',
-        'img': icon_chicken
-    },
-    {
-        'id': 3, 
-        'firstname': 'Max', 
-        'lastname': 'Carluer',
-        'img': icon_sheep,
-        'roles': ['ROLE_ADMIN']
-    }
-];
-
 export const getAllProfileImages = () => {
     return [
         icon_chicken,
@@ -41,7 +18,11 @@ export const getAllProfileImages = () => {
     ];
 }
 
-const userFormatter = (user) => {
+export const userFormatter = (user) => {
+    if (!user.id) {
+        return null;
+    }
+
     return {
         'roles': [],
         'img': icon_chicken,

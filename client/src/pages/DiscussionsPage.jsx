@@ -1,40 +1,62 @@
+import { useEffect } from 'react';
 import { useContext, useState } from 'react';
 import Discussion from '../components/discussion/Discussion';
 import DiscussionPreview from '../components/discussion/DiscussionPreview';
 import DiscussionContext from '../contexts/discussion/DiscussionContext';
 import CurrentUserContext from '../contexts/user/CurrentUserContext';
-import { getDiscussionById, getDiscussions, postMessage } from '../utils/discussion_management';
+import { getDiscussions } from '../utils/discussion_management';
+import { sendMessage } from '../utils/message_management';
 
 const DiscussionsPage = (props) => {
     const {currentUser} = useContext(CurrentUserContext);
     const {selectedDiscussion, setSelectedDiscussion} = useContext(DiscussionContext);
     const [nbMessagesSent, setNbMessagesSent] = useState(0);
-    const [discussions, setDiscussions] = useState(getDiscussions(currentUser));
+    const [discussions, setDiscussions] = useState([]);
 
-    const handleDiscussionClick = (id) => {
-        setSelectedDiscussion(getDiscussionById(currentUser, id));
+    useEffect(() => {
+        connectDiscussion();
+    }, []);
+
+    useEffect(() => {
+        if (selectedDiscussion && !selectedDiscussion.messages) {
+            selectedDiscussion.messages = [];
+        }
+    }, [selectedDiscussion]);
+
+    const connectDiscussion = async () => {
+        const discussionsFound = await getDiscussions();
+        if (discussionsFound && discussionsFound.length) {
+            setDiscussions(discussionsFound);
+        }
+    }
+
+    const handleDiscussionClick = (discussion) => {
+        setSelectedDiscussion(discussion);
     }
 
     const unselectDiscussion = () => {
         setSelectedDiscussion(null);
     }
 
-    const handleSendMessage = (messageText) => {
-        const message = {
-            'id': 1234, 
-            'discussion': selectedDiscussion.id,
-            'text': messageText, 
-            'user': currentUser.id, 
-            'date': new Date()
+    const handleSendMessage = async (messageText) => {
+        if (!messageText.length) {
+            return;
         }
 
-        const messageReturned = postMessage(message);
+        const messageReturned = await sendMessage(selectedDiscussion.id, currentUser.id, messageText);
         if (messageReturned) {
             const discussionToUpdate = selectedDiscussion;
             discussionToUpdate.messages.push(messageReturned);
             setSelectedDiscussion(discussionToUpdate);
             setNbMessagesSent(nbMessagesSent + 1);
         }
+    }
+
+    const handleRefreshMessages = (messages) => {
+        setSelectedDiscussion({
+            ...selectedDiscussion,
+            'messages': messages
+        });
     }
 
     return (
@@ -52,6 +74,7 @@ const DiscussionsPage = (props) => {
                         discussions.length 
                         ? discussions.map(
                             discussion => <DiscussionPreview 
+                                key={discussion.id}
                                 discussion={discussion}
                                 handleDiscussionClick={handleDiscussionClick}
                                 selected={selectedDiscussion && selectedDiscussion.id === discussion.id} 
@@ -64,6 +87,7 @@ const DiscussionsPage = (props) => {
                     selectedDiscussion
                     ? <Discussion 
                         discussion={selectedDiscussion}
+                        handleRefreshMessages={handleRefreshMessages}
                         handleSendMessage={handleSendMessage}
                     />
                     : ''
