@@ -21,21 +21,17 @@ const get = async (req, res) => {
     }
 
     try {
-        const user = await UserRepository.find(req, req.params.id);
-
-        if (user) {
-            return Response.ok(req, res, {
+        const user = await UserRepository.find(req.params.id);
+        
+        return Response.ok(req, res, {
                 id: user.id,
                 firstname: user.firstname,
                 lastname: user.lastname,
                 technologies: user.technologies,
                 schoolBranch: user.schoolBranch,
-            });
-        }
-
-        Response.notFound(req, res, 'User not found');
+        });
     } catch (err) {
-        Response.error(req, res, err.message);
+        Response.notFound(req, res, 'User not found');
     }
 }
 
