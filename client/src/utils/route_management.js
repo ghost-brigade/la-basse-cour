@@ -4,6 +4,7 @@ import DiscussionsPage from '../pages/DiscussionsPage';
 import ProfilePage from '../pages/ProfilePage';
 import RelationsPage from '../pages/RelationsPage';
 import LoginPage from '../pages/LoginPage';
+import RelationsAddPage from '../pages/RelationAddPage';
 
 export const appPages = [
     {
@@ -31,6 +32,15 @@ export const appPages = [
         iconClassNames: ['fa fa-users'], 
         element: <RelationsPage />,
         visibleMenu: () => true,
+        userAccess: (user) => isConnected(user),
+    },
+    {
+        id: 'relation_search', 
+        path: '/relations/search', 
+        label: 'Relations',
+        iconClassNames: ['fa fa-users'], 
+        element: <RelationsAddPage />,
+        visibleMenu: () => false,
         userAccess: (user) => isConnected(user),
     },
     {

@@ -1,10 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import FriendsList from "../components/relation/FriendsList";
-import CurrentUserContext from "../contexts/user/CurrentUserContext";
 import { changeStatusFriendship, getFriendsList, toggleFriendship } from "../utils/relation_management";
 
 const RelationsPage = (props) => {
-    const {currentUser} = useContext(CurrentUserContext);
     const [friends, setFriends] = useState([]);
 
     useEffect(() => {
@@ -12,7 +10,7 @@ const RelationsPage = (props) => {
     }, []);
 
     const initFriends = async () => {
-        const userFriends = await getFriendsList(props.user);
+        const userFriends = await getFriendsList();
         setFriends(userFriends);
     };
 
