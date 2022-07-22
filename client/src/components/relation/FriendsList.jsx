@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { toggleFriendship } from "../../utils/relation_management";
 import UserPreview from "../user/UserPreview";
 import FriendsAddButton from "./FriendsAddButton";
 
@@ -18,7 +16,7 @@ const FriendsList = (props) => {
         props.handleCancelFriendShip(friendShip);
     }
 
-    if (!friendList.length) {
+    if (!friendList.length && props.status !== 'accepted') {
         return <></>;
     }
 
@@ -26,28 +24,36 @@ const FriendsList = (props) => {
         <>
             <h2 className="app_title-button">
                 {props.title}
-                <FriendsAddButton/>
+                {
+                    props.status === 'accepted'
+                        ? <FriendsAddButton/>
+                        : ''
+                }
             </h2>
             <section className="app_friends-list">
-                {friendList.map((friendShip) => <UserPreview key={friendShip.friend.id} user={friendShip.friend}>
-                    {
-                        ['pending'].includes(props.status)
-                        ? <>
-                            {
-                                friendShip.addressee
-                                ? <div onClick={() => handleValidatePending(friendShip)}>
-                                    <i className="fa fa-check icon_rounded app_success"/>
+                {
+                    friendList.length 
+                    ? friendList.map((friendShip) => <UserPreview key={friendShip.friend.id} user={friendShip.friend}>
+                        {
+                            ['pending'].includes(props.status)
+                            ? <>
+                                {
+                                    friendShip.addressee
+                                    ? <div onClick={() => handleValidatePending(friendShip)}>
+                                        <i className="fa fa-check icon_rounded app_success"/>
+                                    </div>
+                                    : ''
+                                }
+                                <div onClick={() => friendShip.addressee ? handleRejectPending(friendShip) : handleCancelFriendShip(friendShip)}>
+                                    <i className="fa fa-close icon_rounded app_danger"/>
                                 </div>
-                                : ''
-                            }
-                            <div onClick={() => friendShip.addressee ? handleRejectPending(friendShip) : handleCancelFriendShip(friendShip)}>
-                                <i className="fa fa-close icon_rounded app_danger"/>
-                            </div>
-                        </>
-                        : ''
-                    }
-                </UserPreview>
-                )}
+                            </>
+                            : ''
+                        }
+                    </UserPreview>
+                    )
+                    : <p style={{margin: 'auto', fontStyle: 'italic'}}>Vous n'avez pas encore d'amis, ajoutez-en facilement en cliquant sur le bouton "+" ci-dessus.</p>
+                }
             </section>
         </>
     )

@@ -35,6 +35,7 @@ const UserPreview = (props) => {
                 {props.children}
                 <OptionsWrapper>
                     <ul>
+                        { props.options ? props.options : '' }
                         <li className="app_content-delete">
                             <i className="fa fa-bullhorn"/> Signaler
                         </li>
