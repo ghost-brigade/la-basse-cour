@@ -1,4 +1,4 @@
-import { User } from "../model/index.js";
+import { User, UserMongo } from "../model/index.js";
 import { Op } from "sequelize";
 
 const find = async (id) => {
@@ -44,12 +44,22 @@ const create = async (email, password, firstname, lastname, technologie, schoolB
         'technologies': technologie,
         'schoolBranch': schoolBranch,
     });
-    return await findByEmail(email);
+    const user = await findByEmail(email);
+
+    await UserMongo.create(user.dataValues);
+
+    return user;
 }
 
 const update = async (user) => {
     await User.update(user, {where: {id: user.id}});
-    return await find(user.id);
+
+    const findUser = await find(user.id);
+
+    await UserMongo.deleteMany({id: findUser.id});
+    await UserMongo.create(findUser.dataValues);
+
+    return findUser;
 }
 
 export { create, findAll, find, findByEmail, update };
