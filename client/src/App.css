@@ -806,6 +806,7 @@ section.app_characters_grid {
   }
   .app_discussions-list {
     max-width: 400px;
+    min-height: 100vh;
   }
   .app_discussions-list .app_discussion-preview {
     max-width: calc(100% - 15px);
