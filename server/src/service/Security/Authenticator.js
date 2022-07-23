@@ -4,7 +4,7 @@ import { createToken } from "../Jwt/JwtGenerator.js";
 
 const authentification = async (email, password) => {
 
-    let user = await userRepository.findByEmail(email);
+    let user = await userRepository.findByEmailPg(email);
     let match = await validate(password, user.password);
 
     if(match === false) {

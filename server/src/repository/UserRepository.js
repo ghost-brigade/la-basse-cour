@@ -1,17 +1,25 @@
 import { User, UserMongo } from "../model/index.js";
-import { Op } from "sequelize";
 
 const find = async (id) => {
-    let user = await User.findOne({ where: { id: id } });
+    let user = await UserMongo.findOne({id: id});
 
     if(user === null) {
-        throw new Error('User with id' + id + ' not found');
+        throw new Error('User not found');
+    }
+    return user;
+}
+
+const findByEmailPg = async (email) => {
+    let user = await User.findOne({ where: { email: email } });
+
+    if(user === null) {
+        throw new Error('User not found');
     }
     return user;
 }
 
 const findByEmail = async (email) => {
-    let user = await User.findOne({ where: { email: email } });
+    let user = await UserMongo.findOne({ email: email });
 
     if(user === null) {
         throw new Error('User not found');
@@ -24,9 +32,10 @@ const findAll = async (id) => {
     let users;
 
     if(id) {
-        users = (await User.findAll({where: {id: {[Op.ne]: id}}}));
+        // find in mongo all users except the one with the id
+        users = await UserMongo.find({id: { $ne: id}});
     } else {
-        users = (await User.findAll());
+        users = await UserMongo.find({});
     }
 
     if(users === null) {
@@ -44,22 +53,19 @@ const create = async (email, password, firstname, lastname, technologie, schoolB
         'technologies': technologie,
         'schoolBranch': schoolBranch,
     });
-    const user = await findByEmail(email);
+    const findUser = await User.findOne({ where: { email: email } });
+    await UserMongo.create(findUser.dataValues);
 
-    await UserMongo.create(user.dataValues);
-
-    return user;
+    return findUser;
 }
 
 const update = async (user) => {
     await User.update(user, {where: {id: user.id}});
-
-    const findUser = await find(user.id);
-
+    const findUser = await User.findByPk(user.id);
     await UserMongo.deleteMany({id: findUser.id});
     await UserMongo.create(findUser.dataValues);
 
     return findUser;
 }
 
-export { create, findAll, find, findByEmail, update };
+export { create, findAll, find, findByEmail, findByEmailPg, update };
