@@ -748,13 +748,14 @@ section.app_characters_grid {
   display: flex;
   justify-content: space-between;
 }
-.app_friends-add-button {
+.app_friends-add-button,
+.app_title-primary-button {
   background-color: var(--color_primary);
   margin-left: auto;
 }
 .app_title-button {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -807,6 +808,9 @@ section.app_characters_grid {
   .app_discussions-list {
     max-width: 400px;
     min-height: 100vh;
+  }
+  .app_discussions-list .app_discussion-preview {
+    max-width: calc(100% - 15px);
   }
   .app_discussions-list .app_discussion-preview {
     max-width: calc(100% - 15px);

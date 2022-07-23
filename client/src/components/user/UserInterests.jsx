@@ -26,7 +26,7 @@ const UserInterests = (props) => {
             {
                 props.user.technologies.length
                 ? <>
-                    <p>Mes centres d'intérêt</p>
+                    <p>{props.title}</p>
                     <div className="app_profile-interests-list">
                         {props.user.technologies.map(technology => <div 
                             key={`interest_${technology}`} 
@@ -53,6 +53,10 @@ const UserInterests = (props) => {
             </div>
         </div>
     )
+}
+
+UserInterests.defaultProps = {
+    title: 'Mes centres d\'intérêt'
 }
 
 export default UserInterests;

@@ -1,4 +1,4 @@
-import MongoFactory from '../service/Database/MongoFactory.js';
+import MongoFactory from '../../service/Database/MongoFactory.js';
 
 const schema = new MongoFactory.Schema({
     request: Object,
