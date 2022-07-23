@@ -38,7 +38,8 @@ const build = async(req, res) => {
 
     return {
         request: request,
-        response: response
+        response: response,
+        createdAt: new Date()
     }
 }
 
