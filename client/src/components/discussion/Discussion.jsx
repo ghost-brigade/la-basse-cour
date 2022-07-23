@@ -26,7 +26,6 @@ const Discussion = (props) => {
         if (discussionId) {
             const messagesFounded = await getMessages(discussionId);
             if (messagesFounded) {
-                console.log(messagesFounded);
                 props.handleRefreshMessages(messagesFounded);
             }
         }

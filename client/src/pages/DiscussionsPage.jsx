@@ -4,7 +4,7 @@ import Discussion from '../components/discussion/Discussion';
 import DiscussionPreview from '../components/discussion/DiscussionPreview';
 import DiscussionContext from '../contexts/discussion/DiscussionContext';
 import CurrentUserContext from '../contexts/user/CurrentUserContext';
-import { getDiscussions } from '../utils/discussion_management';
+import { getDiscussions, leaveDiscussion } from '../utils/discussion_management';
 import { sendMessage } from '../utils/message_management';
 
 const DiscussionsPage = (props) => {
@@ -25,7 +25,9 @@ const DiscussionsPage = (props) => {
     }
 
     const handleDiscussionClick = (discussion) => {
-        setSelectedDiscussion(discussion);
+        if (!selectedDiscussion || selectedDiscussion.id !== discussion.id) {
+            setSelectedDiscussion(discussion);
+        }
     }
 
     const unselectDiscussion = () => {
@@ -53,6 +55,13 @@ const DiscussionsPage = (props) => {
         });
     }
 
+    const handleLeaveDiscussion = async (discussion) => {
+        const leaved = await leaveDiscussion(discussion.id);
+        console.log(leaved);
+        const discussionNotLeaved = discussions.filter(disc => disc.id !== discussion.id);
+        setDiscussions(discussionNotLeaved);
+    }
+
     return (
         <div className='app_discussions-page'>
             {selectedDiscussion 
@@ -71,6 +80,7 @@ const DiscussionsPage = (props) => {
                                 key={discussion.id}
                                 discussion={discussion}
                                 handleDiscussionClick={handleDiscussionClick}
+                                handleLeaveDiscussion={handleLeaveDiscussion}
                                 selected={selectedDiscussion && selectedDiscussion.id === discussion.id} 
                             />
                         )

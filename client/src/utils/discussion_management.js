@@ -1,4 +1,5 @@
 import circle from '../assets/images/circle.jpg';
+import DiscussionImage from '../components/discussion/DiscussionImage';
 import { request } from './request_management';
 import { getUser, getUserTitle, getUserToken, userFormatter } from './user_management';
 
@@ -101,5 +102,20 @@ export const getDiscussionTitle = (discussion, currentUser) => {
         </div>;
     }
 
-    return <h3>{discussion.label ?? 'Discussion sans nom'}</h3>;
+    return <h3 className='app_user-preview'>
+        <DiscussionImage discussion={discussion}/>
+        {discussion.label ?? 'Discussion sans nom'}
+    </h3>;
+}
+
+export const leaveDiscussion = async (discussionId) => {
+    const token = getUserToken();
+
+    return await request(`/discussion/leave/${discussionId}`, {
+        'method': 'GET',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+    });
 }

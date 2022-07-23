@@ -58,9 +58,7 @@ const notFound = async (req, res, message) => {
 }
 
 const deleted = async (req, res, message) => {
-    const response = res.status(200).json({
-        messages: message
-    })
+    const response = res.status(200).json(message)
 
     HttpLogger.create(req, res);
     return response;
