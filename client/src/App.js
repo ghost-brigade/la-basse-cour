@@ -6,7 +6,7 @@ import LoginPage from './pages/LoginPage';
 import ForgottenPasswordPage from './pages/ForgottenPasswordPage';
 import AppProvider from './components/prodiver/AppProvider';
 import { appPages } from './utils/route_management';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import CurrentUserContext from './contexts/user/CurrentUserContext';
 import RegisterPage from './pages/RegisterPage';
 

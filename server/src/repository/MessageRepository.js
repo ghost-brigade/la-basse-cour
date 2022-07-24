@@ -45,7 +45,8 @@ const create = async (discussion, user, text) => {
 
 const update = async (message) => {
     await Message.update(message, {where: {id: message.id}});
-    return await find(message.id);
+    await message.save();
+    return message;
 }
 
 export { create, findAll, findByDiscussion, find, update };

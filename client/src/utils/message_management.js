@@ -28,6 +28,23 @@ export const getMessages = async (discussionId) => {
     return messages.map(message => messageFormatter(message));
 }
 
+export const updateMessage = async (message) => {
+    const token = getUserToken();
+
+    const messageUpdated = await request(`/message/${message.id}`, {
+        'method': 'PUT',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        'body': JSON.stringify({
+            'message': message
+        })
+    });
+
+    return messageFormatter(messageUpdated);
+}
+
 export const sendMessage = async (discussion, user, text) => {
     const token = getUserToken();
 
@@ -45,4 +62,18 @@ export const sendMessage = async (discussion, user, text) => {
     });
 
     return messageFormatter(message);
+}
+
+export const toggleDeleteMessage = async (message) => {
+    const token = getUserToken();
+
+    const messageUpdated = await request(`/message/${message.id}`, {
+        'method': 'DELETE',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return messageFormatter(messageUpdated);
 }

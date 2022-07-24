@@ -5,13 +5,14 @@ import DiscussionPreview from '../components/discussion/DiscussionPreview';
 import DiscussionContext from '../contexts/discussion/DiscussionContext';
 import CurrentUserContext from '../contexts/user/CurrentUserContext';
 import { getDiscussions, leaveDiscussion } from '../utils/discussion_management';
-import { sendMessage } from '../utils/message_management';
+import { sendMessage, updateMessage, toggleDeleteMessage } from '../utils/message_management';
 
 const DiscussionsPage = (props) => {
     const {currentUser} = useContext(CurrentUserContext);
     const {selectedDiscussion, setSelectedDiscussion} = useContext(DiscussionContext);
     const [nbMessagesSent, setNbMessagesSent] = useState(0);
     const [discussions, setDiscussions] = useState([]);
+    const [editingMessage, setEditingMessage] = useState(null);
 
     useEffect(() => {
         connectDiscussion();
@@ -62,6 +63,43 @@ const DiscussionsPage = (props) => {
         setDiscussions(discussionNotLeaved);
     }
 
+    const handleDeleteMessage = async (message) => {
+        const returnedMessage = await toggleDeleteMessage(message);
+        
+        const selectedDiscussionUpdated = selectedDiscussion;
+        selectedDiscussionUpdated.messages = selectedDiscussion.messages.map(message => {
+            if (message.id !== returnedMessage.id) {
+                return message;
+            }
+            return returnedMessage;
+        });
+        
+        setSelectedDiscussion(selectedDiscussionUpdated);
+        setNbMessagesSent(nbMessagesSent + 1);
+    }
+
+    const handleEditMessage = async (messageText) => {
+        if (!messageText.length) {
+            return;
+        }
+
+        editingMessage.text = messageText;
+        
+        const returnedMessage = await updateMessage(editingMessage);
+        console.log(returnedMessage);
+        const selectedDiscussionUpdated = selectedDiscussion;
+        selectedDiscussionUpdated.messages = selectedDiscussion.messages.map(message => {
+            if (message.id !== returnedMessage.id) {
+                return message;
+            }
+            return returnedMessage;
+        });
+        
+        setSelectedDiscussion(selectedDiscussionUpdated);
+        setEditingMessage(null);
+        setNbMessagesSent(nbMessagesSent + 1);
+    }
+
     return (
         <div className='app_discussions-page'>
             {selectedDiscussion 
@@ -93,6 +131,10 @@ const DiscussionsPage = (props) => {
                         discussion={selectedDiscussion}
                         handleRefreshMessages={handleRefreshMessages}
                         handleSendMessage={handleSendMessage}
+                        handleDeleteMessage={handleDeleteMessage}
+                        editingMessage={editingMessage} 
+                        setEditingMessage={setEditingMessage}
+                        handleEditMessage={handleEditMessage}
                     />
                     : ''
                 }

@@ -11,18 +11,35 @@ import icon_site from '../assets/images/icon_site.png';
 import UserIcon from "../components/user/UserIcon";
 import CurrentUserContext from "../contexts/user/CurrentUserContext";
 import { getMenuLinks, getTitle } from "../utils/route_management";
+import { useTracking } from 'react-tracking';
+import { sendLog } from "../utils/log_management";
 
 const Layout = (props) => {
+    const { trackEvent } = useTracking(
+        {service: 'client'},
+        {dispatch: data => sendLog(data)}
+    );
     const {currentUser} = useContext(CurrentUserContext);
     const menuLinks = getMenuLinks(currentUser);
 
     const [title, setTitle] = useState('');
     const match = useMatch({ path: window.location.pathname, end: true });
+
     useEffect(() => {
         if (match) {
             setTitle(getTitle(match.pathname));
         }
     }, [match]);
+
+    useEffect(() => {
+        if (currentUser) {
+            trackEvent({ 
+                action: 'navigation', 
+                user: currentUser.id,
+                path: match.pathname 
+            });
+        }
+    }, [match.pathname]);
 
     return (
         <>

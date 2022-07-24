@@ -15,6 +15,8 @@
   --color_danger: rgb(193, 73, 47);
   --color_danger-hover: rgb(174, 58, 31);
 
+  --color_background-deleted: rgba(193, 74, 47, 0.3);
+
   --color_gradient: radial-gradient(to right, blue, transparent);
 
   /* Message */
@@ -505,6 +507,12 @@ section.app_characters_grid {
   border-radius: 1em;
   border-top-left-radius: 0;
 }
+.app_message.deleted {
+  background-color: var(--color_background-deleted);
+}
+.app_message-content {
+  overflow-wrap: break-word;
+}
 .app_message-content img {
   width: 100%;
   max-width: 300px;
@@ -714,6 +722,7 @@ section.app_characters_grid {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  color: white;
   text-shadow: 0 0 20px black;
 }
 .app_profile-interests-list {
