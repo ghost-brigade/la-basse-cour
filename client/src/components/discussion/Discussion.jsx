@@ -53,7 +53,7 @@ const Discussion = (props) => {
                             .map(message => <Message
                                 {...message}
                                 key={message.id}
-                                isCurrentUserMessage={message.user === currentUser.id}
+                                isCurrentUserMessage={message.user == currentUser.id}
                                 user={users.find(user => user.id === message.user)}
                                 handleDeleteMessage={props.handleDeleteMessage}
                                 handleSetEditMode={handleSetEditMode}

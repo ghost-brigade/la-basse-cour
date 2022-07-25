@@ -5,8 +5,9 @@ import DiscussionPreview from '../components/discussion/DiscussionPreview';
 import DiscussionContext from '../contexts/discussion/DiscussionContext';
 import CurrentUserContext from '../contexts/user/CurrentUserContext';
 import { getDiscussions, leaveDiscussion } from '../utils/discussion_management';
-import { sendMessage, updateMessage, toggleDeleteMessage } from '../utils/message_management';
+import { sendMessage, updateMessage, toggleDeleteMessage, messageFormatter } from '../utils/message_management';
 import * as socketManagement from '../utils/socket_management.js';
+import { userFormatter } from '../utils/user_management';
 
 const socket = socketManagement.init();
 
@@ -17,6 +18,7 @@ const DiscussionsPage = (props) => {
     const [discussions, setDiscussions] = useState([]);
     const [editingMessage, setEditingMessage] = useState(null);
     const [isConnected, setIsConnected] = useState(socket.connected);
+    const [socketMessages, setSocketMessages] = useState([]);
 
     useEffect(() => {
         connectDiscussion();
@@ -30,10 +32,7 @@ const DiscussionsPage = (props) => {
         });
 
         socket.on('message', (message) => {
-            console.log(message);
-            if(currentUser !== message.user.id) {
-                selectedDiscussion.messages.push(message);
-            }
+            addSocketMessage(message);
         });
 
         return () => {
@@ -42,6 +41,23 @@ const DiscussionsPage = (props) => {
             socket.off('message');
         };
     }, []);
+
+    const addSocketMessage = (message) => {
+        const formattedMessage = messageFormatter(message);
+        if (message.user.id !== currentUser.id) {
+            formattedMessage.user = formattedMessage.user.id;
+            setSocketMessages([...socketMessages, formattedMessage]);
+        }
+    }
+
+    useEffect(() => {
+        if (selectedDiscussion && socketMessages.length) {
+            const updatedSelectedDiscussion = selectedDiscussion;
+            updatedSelectedDiscussion.messages.push(...socketMessages);
+            setSelectedDiscussion(updatedSelectedDiscussion);
+            setSocketMessages([]);
+        }
+    }, [socketMessages]);
 
     useEffect(() => {
         if (selectedDiscussion && isConnected) {
@@ -82,6 +98,7 @@ const DiscussionsPage = (props) => {
 
         const messageReturned = await sendMessage(selectedDiscussion.id, currentUser.id, messageText);
         if (messageReturned) {
+            messageReturned.user = messageReturned.user.id;
             const discussionToUpdate = selectedDiscussion;
             discussionToUpdate.messages.push(messageReturned);
             setSelectedDiscussion(discussionToUpdate);
@@ -126,7 +143,6 @@ const DiscussionsPage = (props) => {
         editingMessage.text = messageText;
         
         const returnedMessage = await updateMessage(editingMessage);
-        console.log(returnedMessage);
         const selectedDiscussionUpdated = selectedDiscussion;
         selectedDiscussionUpdated.messages = selectedDiscussion.messages.map(message => {
             if (message.id !== returnedMessage.id) {

@@ -1,7 +1,7 @@
 import { request } from "./request_management";
 import { getUserToken } from "./user_management";
 
-const messageFormatter = (message) => {
+export const messageFormatter = (message) => {
     if (!message) {
         return null;
     }
