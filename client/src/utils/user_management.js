@@ -100,7 +100,7 @@ export const register = async (credentials) => {
     return null;
 }
 
-export const login = async (credentials = {email: 'user@test.fr', password: 'myawesomepassword'}) => {
+export const login = async (credentials) => {
     if (!credentials.email || !credentials.password) {
         return null;
     }
