@@ -56,6 +56,12 @@ const Message = (props) => {
         props.handleDeleteMessage(message);
     }
 
+    const isModifiedText = () => {
+        return (message.createdAt.getTime()/100).toFixed(0) === (message.updatedAt.getTime()/100).toFixed(0)
+            ? ''
+            : <i> (modifié)</i>;
+    }
+
     return (
         <div className={['app_message', (message.isCurrentUserMessage ? 'currentUserMessage' : ''), (message.deletedAt !== null ? 'deleted' : '')].join(' ')}>
             <header>
@@ -84,7 +90,7 @@ const Message = (props) => {
                 }
             </header>
             <div className="app_message-content">{message.deletedAt !== null ? 'Message supprimé' : message.text}</div>
-            <footer className="app_message-date">{transformDatetoStr(message.createdAt)}</footer>
+            <footer className="app_message-date">{transformDatetoStr(message.createdAt)}{isModifiedText()}</footer>
         </div>
     )
 }
