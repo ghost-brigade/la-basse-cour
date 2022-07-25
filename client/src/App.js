@@ -12,13 +12,11 @@ import RegisterPage from './pages/RegisterPage';
 
 function App() {
   return (
-    <>
-      <AppProvider>
-        <BrowserRouter>
-          <AppRoutes/>
-        </BrowserRouter>
-      </AppProvider>
-    </>
+    <AppProvider>
+      <BrowserRouter>
+        <AppRoutes/>
+      </BrowserRouter>
+    </AppProvider>
   );
 }
 
@@ -35,6 +33,7 @@ const AppRoutes = (props) => {
 
   return (
     <Routes>
+      <Route path="/register" element={<RegisterPage/>}/>
       <Route path="/login" element={<LoginPage />}/>
       <Route path="/forgotten-password" element={<ForgottenPasswordPage />}/>
       <Route path="/" element={<Layout title={title}/>}>

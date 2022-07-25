@@ -1,10 +1,23 @@
+import { sendErrorLog, sendSuccessLog } from "./log_management";
+
 export const request = async (url, options) => {
     try {
         return await fetch(`http://localhost:3000${url}`, options)
-        .then(response => response.json())
-        .catch(err => console.error(err));
+        .then(response => {
+            if (!response.ok) {
+                sendErrorLog(`${response.status} ${response.statusText} ${url}`);
+            } else {
+                sendSuccessLog({
+                    'url': url,
+                });
+            }
+            return response.json();
+        })
+        .catch(error => {
+            sendErrorLog(error);
+        });
     } catch (error) {
-        console.log(error);
+        sendErrorLog(error);
         return null;
     }
 }

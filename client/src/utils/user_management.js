@@ -42,6 +42,7 @@ export const userFormatter = (user) => {
     return {
         'roles': [],
         'img': icon_chicken,
+        'technologies': user.technologies ? user.technologies : [],
         ...user
     }
 }

@@ -94,3 +94,33 @@ export const fillFriendship = async (url, relation) => {
     relation.friend = userFormatter(userRelation);
     return relation;
 }
+
+export const blockUser = async (userId) => {
+    const token = getUserToken();
+
+    return await request(`/friend/block`, {
+        'method': 'POST',
+        'headers': {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        'body': JSON.stringify({
+            'addresseeId': userId,
+        })
+    });
+}
+
+export const unblockUser = async (userId) => {
+    const token = getUserToken();
+
+    return await request(`/friend/unblock`, {
+        'method': 'POST',
+        'headers': {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        'body': JSON.stringify({
+            'addresseeId': userId,
+        })
+    });
+}

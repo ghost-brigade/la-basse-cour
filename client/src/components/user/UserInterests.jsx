@@ -24,7 +24,7 @@ const UserInterests = (props) => {
     return (
         <div className="my-2">
             {
-                props.user.technologies.length
+                props.user.technologies && props.user.technologies.length
                 ? <>
                     <p>{props.title}</p>
                     <div className="app_profile-interests-list">
@@ -44,7 +44,9 @@ const UserInterests = (props) => {
                 <select className="form-control" id="technologies" name='technologies' onChange={handleChangeInterest}>
                     <option>Sélectionnez une technologie</option>
                     {allTechnologies.filter(technology => {
-                        return !props.user.technologies.includes(technology)
+                        return !props.user.technologies 
+                            || props.user.technologies.length === 0 
+                            || !props.user.technologies.includes(technology)
                     }).sort()
                     .map(technology => <option key={`interest_${technology}`} value={technology}>
                         {technology}

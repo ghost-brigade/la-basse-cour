@@ -1,8 +1,9 @@
+import { useEffect, useState } from "react";
 import UserPreview from "../user/UserPreview";
 import FriendsAddButton from "./FriendsAddButton";
 
 const FriendsList = (props) => {
-    const friendList = props.friends.filter(friendShip => friendShip.status === props.status);
+    const [friendList, setFriendList] = useState(props.friends.filter(friendShip => friendShip.status === props.status));
 
     const handleValidatePending = async (friendShip) => {
         props.handleChangeStatusFriendship(friendShip, 'accepted');
@@ -15,6 +16,22 @@ const FriendsList = (props) => {
     const handleCancelFriendShip = async (friendShip) => {
         props.handleCancelFriendShip(friendShip);
     }
+
+    const handleBlockFriendShip = async (user) => {
+        if (props.handleBlockFriendShip) {
+            props.handleBlockFriendShip(user);
+        }
+    }
+
+    const handleUnblockFriendShip = async (user) => {
+        if (props.handleUnblockFriendShip) {
+            props.handleUnblockFriendShip(user);
+        }
+    }
+
+    useEffect(() => {
+        setFriendList(props.friends.filter(friendShip => friendShip.status === props.status));
+    }, [props.friends]);
 
     if (!friendList.length && props.status !== 'accepted') {
         return <></>;
@@ -33,7 +50,13 @@ const FriendsList = (props) => {
             <section className="app_friends-list">
                 {
                     friendList.length 
-                    ? friendList.map((friendShip) => <UserPreview key={friendShip.friend.id} user={friendShip.friend}>
+                    ? friendList.map((friendShip) => <UserPreview 
+                        status={friendShip.status}
+                        key={friendShip.friend.id} 
+                        user={friendShip.friend}
+                        handleBlockUser={handleBlockFriendShip}
+                        handleUnblockUser={handleUnblockFriendShip}
+                    >
                         {
                             ['pending'].includes(props.status)
                             ? <>

@@ -17,7 +17,7 @@ import { sendLog } from "../utils/log_management";
 const Layout = (props) => {
     const { trackEvent } = useTracking(
         {service: 'client'},
-        {dispatch: data => sendLog(data)}
+        {dispatch: data => sendLog(data, 'navigation')}
     );
     const {currentUser} = useContext(CurrentUserContext);
     const menuLinks = getMenuLinks(currentUser);

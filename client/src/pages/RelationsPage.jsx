@@ -15,8 +15,13 @@ const RelationsPage = (props) => {
     };
 
     const handleChangeStatusFriendship = async (friendShip, status) => {
-        const canceled = await changeStatusFriendship(friendShip.friend.id, status);
-        const friendsFiltered = friends.filter(friend => friend.id !== friendShip.id);
+        const friendshipUpdated = await changeStatusFriendship(friendShip.friend.id, status);
+        const friendsFiltered = friends.map(friend => {
+            if (friend.id !== friendshipUpdated.id) {
+                return friend;
+            }
+            return friendshipUpdated;
+        });
         setFriends(friendsFiltered);
     }
 
@@ -26,10 +31,26 @@ const RelationsPage = (props) => {
         setFriends(friendsFiltered);
     }
 
+    const handleBlockFriendShip = (user) => {
+        setFriends(friends.map(friend => {
+            if (friend.friend.id !== user.id) {
+                return friend;
+            }
+            friend.status = 'blocked';
+            return friend;
+        }));
+    }
+
+    const handleUnblockFriendShip = (user) => {
+        setFriends(friends.filter(friend => friend.friend.id !== user.id));
+    }
+
     return (
         <>
             <FriendsList 
                 friends={friends}
+                handleBlockFriendShip={handleBlockFriendShip}
+                handleUnblockFriendShip={handleUnblockFriendShip}
             />
             <FriendsList 
                 friends={friends} 
@@ -37,16 +58,22 @@ const RelationsPage = (props) => {
                 title='Mes demandes en attente' 
                 handleChangeStatusFriendship={handleChangeStatusFriendship} 
                 handleCancelFriendShip={handleCancelFriendShip}
+                handleBlockFriendShip={handleBlockFriendShip}
+                handleUnblockFriendShip={handleUnblockFriendShip}
             />
             <FriendsList 
                 friends={friends} 
                 status='rejected' 
                 title='Mes demandes rejettées'
+                handleBlockFriendShip={handleBlockFriendShip}
+                handleUnblockFriendShip={handleUnblockFriendShip}
             />
             <FriendsList 
                 friends={friends} 
                 status='blocked' 
                 title='Mes demandes bloquées'
+                handleBlockFriendShip={handleBlockFriendShip}
+                handleUnblockFriendShip={handleUnblockFriendShip}
             />
         </>
     );

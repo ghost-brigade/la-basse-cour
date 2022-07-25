@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import CurrentUserContext from "../contexts/user/CurrentUserContext";
-import { updateUser } from "../utils/user_management";
+import { getUserToken, loginFromToken, updateUser } from "../utils/user_management";
 import SendButton from "../components/form/SendButton";
 import UserProfileSelector from "../components/user/UserProfileSelector";
 import UserInformations from "../components/user/UserInformations";
@@ -12,6 +12,18 @@ const ProfilePage = (props) => {
     const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
     const [userEdited, setUserEdited] = useState(currentUser);
     const [isEditing, setIsEditing] = useState(true);
+    const [isReady, setIsReady] = useState(false);
+
+    useEffect(() => {
+        refreshCurrentUser();
+    }, []);
+
+    const refreshCurrentUser = async () => {
+        const user = await loginFromToken(getUserToken());
+        setCurrentUser(user);
+        setUserEdited(user);
+        setIsReady(true);
+    }
 
     const handleChangeData = (event) => {
         const key = event.target.id;
@@ -57,6 +69,10 @@ const ProfilePage = (props) => {
         const user = userEdited;
         user.technologies = user.technologies.filter(technology => technology !== interest);
         setUserEdited(user);
+    }
+
+    if (!isReady) {
+        return <div>Rafraîchissement de mes informations...</div>;
     }
 
     return (

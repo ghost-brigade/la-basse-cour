@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import DiscussionContext from "../../contexts/discussion/DiscussionContext";
 import CurrentUserContext from "../../contexts/user/CurrentUserContext";
 import { getPrivateDiscussion } from "../../utils/discussion_management";
+import { blockUser, unblockUser } from "../../utils/relation_management";
 import { getUserTitle } from "../../utils/user_management";
 import OptionsWrapper from "../wrappers/OptionsWrapper";
 
@@ -18,6 +19,22 @@ const UserPreview = (props) => {
         if (discussion) {
             setSelectedDiscussion(discussion);
             navigate('/discussions');
+        }
+    }
+
+    const handleBlockUser = async () => {
+        const blocked = await blockUser(user.id);
+
+        if (blocked && props.handleBlockUser) {
+            props.handleBlockUser(user);
+        }
+    }
+
+    const handleUnblockUser = async () => {
+        const unblocked = await unblockUser(user.id);
+
+        if (unblocked && props.handleUnblockUser) {
+            props.handleUnblockUser(user);
         }
     }
 
@@ -39,9 +56,16 @@ const UserPreview = (props) => {
                         <li className="app_content-delete">
                             <i className="fa fa-bullhorn"/> Signaler
                         </li>
-                        <li className="app_content-delete">
-                            <i className="fa fa-times-circle"/> Bloquer
-                        </li>
+                        {
+                            props.status === 'blocked'
+                            ? <li onClick={handleUnblockUser}>
+                                <i className="fa fa-check"/> Débloquer
+                            </li>
+                            : <li className="app_content-delete" onClick={handleBlockUser}>
+                                <i className="fa fa-times-circle"/> Bloquer
+                            </li>
+                        }
+                        
                     </ul>
                 </OptionsWrapper>
             </h3>
