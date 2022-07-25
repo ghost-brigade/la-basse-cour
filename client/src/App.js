@@ -6,19 +6,17 @@ import LoginPage from './pages/LoginPage';
 import ForgottenPasswordPage from './pages/ForgottenPasswordPage';
 import AppProvider from './components/prodiver/AppProvider';
 import { appPages } from './utils/route_management';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import CurrentUserContext from './contexts/user/CurrentUserContext';
 import RegisterPage from './pages/RegisterPage';
 
 function App() {
   return (
-    <>
-      <AppProvider>
-        <BrowserRouter>
-          <AppRoutes/>
-        </BrowserRouter>
-      </AppProvider>
-    </>
+    <AppProvider>
+      <BrowserRouter>
+        <AppRoutes/>
+      </BrowserRouter>
+    </AppProvider>
   );
 }
 
@@ -35,6 +33,7 @@ const AppRoutes = (props) => {
 
   return (
     <Routes>
+      <Route path="/register" element={<RegisterPage/>}/>
       <Route path="/login" element={<LoginPage />}/>
       <Route path="/forgotten-password" element={<ForgottenPasswordPage />}/>
       <Route path="/" element={<Layout title={title}/>}>

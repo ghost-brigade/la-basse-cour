@@ -29,7 +29,7 @@ const LoginPage = (props) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const user = await login(values.email, values.password);
+        const user = await login(values);
         if (user) {
             setCurrentUser(user);
             navigate('/');

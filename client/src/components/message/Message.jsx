@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useState } from "react";
 import OptionsWrapper from "../wrappers/OptionsWrapper";
 import MessageUser from "./MessageUser";
 
@@ -46,26 +48,42 @@ const transformDatetoStr = (date) => {
 const Message = (props) => {
     const {user, ...message} = props;
 
+    const handleSetEditMode = () => {
+        props.handleSetEditMode(message);
+    }
+    
+    const toggleDeleteMessage = async () => {
+        props.handleDeleteMessage(message);
+    }
+
     return (
-        <div className={['app_message', (message.isCurrentUserMessage ? 'currentUserMessage' : '')].join(' ')}>
+        <div className={['app_message', (message.isCurrentUserMessage ? 'currentUserMessage' : ''), (message.deletedAt !== null ? 'deleted' : '')].join(' ')}>
             <header>
                 <MessageUser {...user} isCurrentUserMessage={message.isCurrentUserMessage}/>
                 {
                     message.isCurrentUserMessage
                         ? <OptionsWrapper>
                             <ul>
-                                <li>
-                                    <i className="fa fa-edit"/> Modifier
-                                </li>
-                                <li className="app_content-delete">
-                                    <i className="fa fa-trash"/> Supprimer
-                                </li>
+                                {
+                                    message.deletedAt !== null 
+                                    ? <li onClick={toggleDeleteMessage}>
+                                        <i className="fa fa-check"/> Remettre
+                                    </li>
+                                    : <>
+                                        <li onClick={handleSetEditMode}>
+                                            <i className="fa fa-edit"/> Modifier
+                                        </li>
+                                        <li className="app_content-delete" onClick={toggleDeleteMessage}>
+                                            <i className="fa fa-trash"/> Supprimer
+                                        </li>
+                                    </>
+                                }
                             </ul>
                         </OptionsWrapper>
                         : ''
                 }
             </header>
-            <div className="app_message-content">{message.text}</div>
+            <div className="app_message-content">{message.deletedAt !== null ? 'Message supprimé' : message.text}</div>
             <footer className="app_message-date">{transformDatetoStr(message.createdAt)}</footer>
         </div>
     )

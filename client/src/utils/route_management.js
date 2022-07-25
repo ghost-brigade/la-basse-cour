@@ -50,7 +50,7 @@ export const appPages = [
         iconClassNames: ['fa fa-bar-chart'], 
         element: <StatisticsPage />,
         visibleMenu: () => true,
-        userAccess: (user) => isConnected(user) && isGranted(user, ['ROLE_ADMIN']),
+        userAccess: (user) => isConnected(user) && isGranted(user, ['admin']),
     },
     {
         id: 'profile', 

@@ -42,11 +42,56 @@ const create = async (req, res) => {
 }
 
 const update = async (req, res) => {
-    res.send("update");
+    if(req.body === undefined || req.body.message === undefined) {
+        return Response.unprocessableEntity(req, res, "Missing parameters");
+    }
+
+    try {
+        const messageData = req.body.message;
+
+        let message = await MessageRepository.find(req.params.id);
+
+        if (messageData.text) {
+            message.text = messageData.text;
+        }
+
+        message = await MessageRepository.update(message);
+
+        return Response.ok(req, res, message);
+    } catch (err) {
+        if(err instanceof ValidationError) {
+            return Response.unprocessableEntity(req, res, formatError(err));
+        } else {
+            return Response.error(req, res, err.message);
+        }
+    }
 }
 
 const remove = async (req, res) => {
-    res.send("remove");
+    if(req.params === undefined || req.params.id === undefined) {
+        return Response.unprocessableEntity(req, res, "Missing parameters");
+    }
+
+    try {
+        let message = await MessageRepository.find(req.params.id);
+
+        message.deletedAt = message.deletedAt
+            ? null
+            : new Date();
+
+        message = await MessageRepository.update(message);
+        
+        if (message.deletedAt) {
+            return Response.deleted(req, res, message);
+        }
+        return Response.ok(req, res, message);
+    } catch (err) {
+        if(err instanceof ValidationError) {
+            return Response.unprocessableEntity(req, res, formatError(err));
+        } else {
+            return Response.error(req, res, err.message);
+        }
+    }
 }
 
 export {

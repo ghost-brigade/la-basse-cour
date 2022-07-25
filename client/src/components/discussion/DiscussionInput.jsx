@@ -3,26 +3,26 @@ import DiscussionEmojiSelector from "./DiscussionEmojiSelector";
 import TextareaAutosize from 'react-textarea-autosize';
 
 const DiscussionInput = (props) => {
-    const [message, setMessage] = useState('');
-
     const sendFunction = () => {
-        props.sendMessageFunction(message);
-        setMessage('');
+        if (props.editingMessage) {
+            props.editMessageFunction();
+        } else {
+            props.sendMessageFunction();
+        }
     }
 
     const handleKeyPress = event => {
         if (event.key === 'Enter') {
-            props.sendMessageFunction(message);
-            setMessage('');
+            sendFunction();
         }
     }
     
     const handleChange = event => {
-        setMessage(event.target.value.replace('\n', ''));
+        props.setMessage(event.target.value.replace('\n', ''));
     }
 
     const handleAddEmoji = emoji => {
-        setMessage(message + emoji);
+        props.setMessage(props.message + emoji);
     }
 
     return (
@@ -32,12 +32,19 @@ const DiscussionInput = (props) => {
                     handleClick={handleAddEmoji}
                 />
                 <TextareaAutosize 
-                    value={message}
+                    value={props.message}
                     type="text" 
                     placeholder="Message"
                     onKeyPress={handleKeyPress}
                     onChange={handleChange}
                 />
+                {
+                    props.editingMessage
+                    ?   <i 
+                        className="fa fa-cancel" 
+                    />
+                    : ''
+                }
                 <i 
                     className="fa fa-send" 
                     onClick={sendFunction}

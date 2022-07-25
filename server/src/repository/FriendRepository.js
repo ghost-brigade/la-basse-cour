@@ -12,10 +12,12 @@ const find = async (id) => {
 
 const findByRequesterOrAddressee = async (requesterId, addresseeId) => {
     let friend = await Friend.findOne({
-        $or: [
-            {requesterId: requesterId, addresseeId: addresseeId},
-            {requesterId: addresseeId, addresseeId: requesterId}
-        ]
+        where: {
+            [Op.or]: [
+                {requesterId: requesterId, addresseeId: addresseeId},
+                {requesterId: addresseeId, addresseeId: requesterId}
+            ]
+        }
     });
 
     if(friend === null) {

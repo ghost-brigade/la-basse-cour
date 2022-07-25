@@ -15,6 +15,8 @@
   --color_danger: rgb(193, 73, 47);
   --color_danger-hover: rgb(174, 58, 31);
 
+  --color_background-deleted: rgba(193, 74, 47, 0.3);
+
   --color_gradient: radial-gradient(to right, blue, transparent);
 
   /* Message */
@@ -505,6 +507,12 @@ section.app_characters_grid {
   border-radius: 1em;
   border-top-left-radius: 0;
 }
+.app_message.deleted {
+  background-color: var(--color_background-deleted);
+}
+.app_message-content {
+  overflow-wrap: break-word;
+}
 .app_message-content img {
   width: 100%;
   max-width: 300px;
@@ -613,6 +621,64 @@ section.app_characters_grid {
   justify-content: space-between;
 }
 
+.app_discussion-image {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.app_discussion-image-users-count {
+  min-width: 30px;
+  min-height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color_secondary);
+  border-radius: 50%;
+}
+.app_discussion-image-users {
+  position: absolute;
+  top: 40px;
+  display: inline-flex;
+  flex-direction: column;
+  border-radius: 1em;
+  border-top-left-radius: 0;
+  background-color: var(--color_background-secondary);
+  transition: 0.5s;
+  
+  opacity: 0;
+  gap: 0;
+  padding: 0 1em;
+}
+.app_discussion-image-user-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  width: fit-content;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  
+  opacity: 0;
+  max-height: 0;
+  transition: 0.5s;
+}
+.app_discussion-image-user-preview img {
+  border-radius: 50%;
+  width: 30px;
+  max-width: 50px;
+}
+
+.app_discussion-image:hover .app_discussion-image-users {
+  opacity: 1;
+  gap: 0.5em;
+  padding: 0.5em 1em;
+}
+.app_discussion-image:hover .app_discussion-image-user-preview {
+  opacity: 1;
+  max-height: 50px;
+}
+
 .app_user-profile-selector {
   display: flex;
   flex-wrap: wrap;
@@ -656,6 +722,7 @@ section.app_characters_grid {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  color: white;
   text-shadow: 0 0 20px black;
 }
 .app_profile-interests-list {
@@ -693,8 +760,6 @@ section.app_characters_grid {
 .app_discussions-list {
   width: 100%;
   min-width: 300px;
-  max-height: calc(100vh - 150px);
-  overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -807,6 +872,12 @@ section.app_characters_grid {
   }
   .app_discussions-list {
     max-width: 400px;
+    height: 100vh;
+    max-height: calc(100vh - 150px);
+    overflow: auto;
+  }
+  .app_discussions-list .app_discussion-preview {
+    max-width: calc(100% - 15px);
   }
   .app_discussions-list .app_discussion-preview {
     max-width: calc(100% - 15px);

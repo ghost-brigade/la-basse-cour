@@ -14,7 +14,7 @@ const findAll = async (id) => {
     let discussions;
 
     if(id) {
-        discussions = (await Discussion.findAll({where: {id: {[Op.ne]: id}}}));
+        discussions = (await Discussion.findAll({where: {users: {[Op.contains]: [id]}}}));
     } else {
         discussions = (await Discussion.findAll());
     }
@@ -25,15 +25,22 @@ const findAll = async (id) => {
     return discussions;
 }
 
-const create = async (users) => {
+const create = async (users, label) => {
     return await Discussion.create({
         'users': users,
+        'label': label,
     });
 }
 
 const update = async (discussion) => {
     await Discussion.update(discussion, {where: {id: discussion.id}});
+    await discussion.save();
     return await find(discussion.id);
 }
 
-export { create, findAll, find, update };
+const remove = async (discussion) => {
+    await discussion.destroy();
+    return 'Removed';
+}
+
+export { create, findAll, find, update, remove };

@@ -11,6 +11,10 @@ const DiscussionPreview = (props) => {
         props.handleDiscussionClick(discussion);
     }
 
+    const handleLeaveDiscussion = () => {
+        props.handleLeaveDiscussion(discussion);
+    }
+
     return (
         <div 
             onClick={() => handleDiscussionClick(discussion)}
@@ -19,7 +23,7 @@ const DiscussionPreview = (props) => {
             {getDiscussionTitle(discussion, currentUser)}
             <OptionsWrapper>
                 <ul>
-                    <li>
+                    <li onClick={handleLeaveDiscussion}>
                         <i className="fa fa-edit"/> Quitter
                     </li>
                     <li className="app_content-delete">
