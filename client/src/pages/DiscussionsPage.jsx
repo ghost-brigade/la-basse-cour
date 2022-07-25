@@ -6,6 +6,9 @@ import DiscussionContext from '../contexts/discussion/DiscussionContext';
 import CurrentUserContext from '../contexts/user/CurrentUserContext';
 import { getDiscussions, leaveDiscussion } from '../utils/discussion_management';
 import { sendMessage, updateMessage, toggleDeleteMessage } from '../utils/message_management';
+import * as socketManagement from '../utils/socket_management.js';
+
+const socket = socketManagement.init();
 
 const DiscussionsPage = (props) => {
     const {currentUser} = useContext(CurrentUserContext);
@@ -13,10 +16,47 @@ const DiscussionsPage = (props) => {
     const [nbMessagesSent, setNbMessagesSent] = useState(0);
     const [discussions, setDiscussions] = useState([]);
     const [editingMessage, setEditingMessage] = useState(null);
+    const [isConnected, setIsConnected] = useState(socket.connected);
 
     useEffect(() => {
         connectDiscussion();
+
+        socket.on('connect', () => {
+            setIsConnected(true);
+        });
+
+        socket.on('disconnect', () => {
+            setIsConnected(false);
+        });
+
+        socket.on('message', (message) => {
+            console.log(message);
+            if(currentUser !== message.user.id) {
+                selectedDiscussion.messages.push(message);
+            }
+        });
+
+        return () => {
+            socket.off('connect');
+            socket.off('disconnect');
+            socket.off('message');
+        };
     }, []);
+
+    useEffect(() => {
+        if (selectedDiscussion && isConnected) {
+            socket.emit('join', selectedDiscussion.id, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+            console.log('join discussion ' + selectedDiscussion.id);
+        }
+
+        return () => {
+            socket.off('join');
+        }
+    }, [selectedDiscussion]);
 
     const connectDiscussion = async () => {
         const discussionsFound = await getDiscussions();
