@@ -9,6 +9,7 @@ import userRouter from "./user.js";
 import friendRouter from "./friend.js";
 import profileRouter from "./profile.js";
 import discussionRouter from "./discussion.js";
+import dataRouter from "./data.js";
 
 const router = express.Router();
 
@@ -22,11 +23,7 @@ router.use('/message', AuthentificationMiddleware, messageRouter);
 router.use('/friend', AuthentificationMiddleware, friendRouter);
 router.use('/profile', AuthentificationMiddleware, profileRouter);
 router.use('/discussion', AuthentificationMiddleware, discussionRouter);
-
-router.get('/test', async (req, res) => {
-
-    return Response.ok(req, res, "DQSDEZSQF");
-});
+router.use('/data', AuthentificationMiddleware, dataRouter);
 
 router.get('*', async (req, res) => {
     return Response.notFound(req, res, "Page not found");
