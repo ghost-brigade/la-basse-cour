@@ -59,6 +59,7 @@ const update = async (req, res) => {
         }
 
         message = await MessageRepository.update(message);
+        io.to(message.discussion).emit('message.update', message);
 
         return Response.ok(req, res, message);
     } catch (err) {
@@ -83,7 +84,8 @@ const remove = async (req, res) => {
             : new Date();
 
         message = await MessageRepository.update(message);
-        
+        io.to(message.discussion).emit('message.update', message);
+
         if (message.deletedAt) {
             return Response.deleted(req, res, message);
         }

@@ -19,6 +19,7 @@ const DiscussionsPage = (props) => {
     const [editingMessage, setEditingMessage] = useState(null);
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [socketMessages, setSocketMessages] = useState([]);
+    const [socketUpdatedMessages, setSocketUpdatedMessages] = useState([]);
 
     useEffect(() => {
         connectDiscussion();
@@ -35,10 +36,15 @@ const DiscussionsPage = (props) => {
             addSocketMessage(message);
         });
 
+        socket.on('message.update', (message) => {
+            updateSocketMessage(message);
+        });
+
         return () => {
             socket.off('connect');
             socket.off('disconnect');
             socket.off('message');
+            socket.off('message.update');
         };
     }, []);
 
@@ -47,6 +53,13 @@ const DiscussionsPage = (props) => {
         if (message.user.id !== currentUser.id) {
             formattedMessage.user = formattedMessage.user.id;
             setSocketMessages([...socketMessages, formattedMessage]);
+        }
+    }
+
+    const updateSocketMessage = (message) => {
+        const formattedMessage = messageFormatter(message);
+        if (message.user.id !== currentUser.id) {
+            setSocketUpdatedMessages([...socketUpdatedMessages, formattedMessage]);
         }
     }
 
@@ -60,13 +73,30 @@ const DiscussionsPage = (props) => {
     }, [socketMessages]);
 
     useEffect(() => {
+        if (selectedDiscussion && socketUpdatedMessages.length) {
+            const updatedSelectedDiscussion = selectedDiscussion;
+            updatedSelectedDiscussion.messages = updatedSelectedDiscussion.messages.map(message => {
+                for (let index in socketUpdatedMessages) {
+                    if (socketUpdatedMessages[index].id === message.id) {
+                        return socketUpdatedMessages[index];
+                    }
+                }
+
+                return message;
+            });
+            setSelectedDiscussion(updatedSelectedDiscussion);
+            setSocketUpdatedMessages([]);
+        }
+    }, [socketUpdatedMessages]);
+
+    useEffect(() => {
         if (selectedDiscussion && isConnected) {
             socket.emit('join', selectedDiscussion.id, (err) => {
                 if (err) {
                     console.log(err);
                 }
             });
-            console.log('join discussion ' + selectedDiscussion.id);
+            //console.log('join discussion ' + selectedDiscussion.id);
         }
 
         return () => {
@@ -115,14 +145,14 @@ const DiscussionsPage = (props) => {
 
     const handleLeaveDiscussion = async (discussion) => {
         const leaved = await leaveDiscussion(discussion.id);
-        console.log(leaved);
+        //console.log(leaved);
         const discussionNotLeaved = discussions.filter(disc => disc.id !== discussion.id);
         setDiscussions(discussionNotLeaved);
     }
 
     const handleDeleteMessage = async (message) => {
         const returnedMessage = await toggleDeleteMessage(message);
-        
+
         const selectedDiscussionUpdated = selectedDiscussion;
         selectedDiscussionUpdated.messages = selectedDiscussion.messages.map(message => {
             if (message.id !== returnedMessage.id) {
@@ -130,7 +160,7 @@ const DiscussionsPage = (props) => {
             }
             return returnedMessage;
         });
-        
+
         setSelectedDiscussion(selectedDiscussionUpdated);
         setNbMessagesSent(nbMessagesSent + 1);
     }
@@ -141,7 +171,7 @@ const DiscussionsPage = (props) => {
         }
 
         editingMessage.text = messageText;
-        
+
         const returnedMessage = await updateMessage(editingMessage);
         const selectedDiscussionUpdated = selectedDiscussion;
         selectedDiscussionUpdated.messages = selectedDiscussion.messages.map(message => {
@@ -150,7 +180,7 @@ const DiscussionsPage = (props) => {
             }
             return returnedMessage;
         });
-        
+
         setSelectedDiscussion(selectedDiscussionUpdated);
         setEditingMessage(null);
         setNbMessagesSent(nbMessagesSent + 1);
@@ -158,7 +188,7 @@ const DiscussionsPage = (props) => {
 
     return (
         <div className='app_discussions-page'>
-            {selectedDiscussion 
+            {selectedDiscussion
                 ? <h2 onClick={unselectDiscussion}>
                     <span ><i className='app_return-button fa fa-chevron-left'/> </span>
                     Liste des discussions
@@ -168,14 +198,14 @@ const DiscussionsPage = (props) => {
             <div className='app_discussions'>
                 <section className={`app_discussions-list ${selectedDiscussion ? 'elementSelected': ''}`}>
                     {
-                        discussions.length 
+                        discussions.length
                         ? discussions.map(
-                            discussion => <DiscussionPreview 
+                            discussion => <DiscussionPreview
                                 key={discussion.id}
                                 discussion={discussion}
                                 handleDiscussionClick={handleDiscussionClick}
                                 handleLeaveDiscussion={handleLeaveDiscussion}
-                                selected={selectedDiscussion && selectedDiscussion.id === discussion.id} 
+                                selected={selectedDiscussion && selectedDiscussion.id === discussion.id}
                             />
                         )
                         : 'Aucune discussion n\'est en cours'
@@ -183,12 +213,12 @@ const DiscussionsPage = (props) => {
                 </section>
                 {
                     selectedDiscussion
-                    ? <Discussion 
+                    ? <Discussion
                         discussion={selectedDiscussion}
                         handleRefreshMessages={handleRefreshMessages}
                         handleSendMessage={handleSendMessage}
                         handleDeleteMessage={handleDeleteMessage}
-                        editingMessage={editingMessage} 
+                        editingMessage={editingMessage}
                         setEditingMessage={setEditingMessage}
                         handleEditMessage={handleEditMessage}
                     />
