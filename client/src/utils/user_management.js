@@ -25,13 +25,22 @@ export const getAllSchoolBranches = () => {
 
 export const getAllProfileImages = () => {
     return [
-        icon_chicken,
-        icon_cow,
-        icon_donkey,
-        icon_pig,
-        icon_sheep,
-        icon_turkey,
+        {'id': 'icon_chicken', 'img': icon_chicken},
+        {'id': 'icon_cow', 'img': icon_cow},
+        {'id': 'icon_donkey', 'img': icon_donkey},
+        {'id': 'icon_pig', 'img': icon_pig},
+        {'id': 'icon_sheep', 'img': icon_sheep},
+        {'id': 'icon_turkey', 'img': icon_turkey},
     ];
+}
+
+export const getImageFromId = (id) => {
+    const matchingImages = getAllProfileImages().filter(imageData => imageData.id === id);
+    if (matchingImages && matchingImages.length) {
+        return matchingImages[0].img;
+    } else {
+        return icon_chicken;
+    }
 }
 
 export const userFormatter = (user) => {
@@ -39,12 +48,18 @@ export const userFormatter = (user) => {
         return null;
     }
 
-    return {
+    const imgId = user.img ? user.img : 'icon_chicken';
+    const realImg = getImageFromId(imgId);
+
+    const userFormatted = {
         'roles': [],
-        'img': icon_chicken,
         'technologies': user.technologies ? user.technologies : [],
-        ...user
+        ...user,
+        'imgId': imgId,
+        'img': realImg,
     }
+
+    return userFormatted;
 }
 
 export const getAllUsers = async () => {
@@ -122,6 +137,21 @@ export const login = async (credentials) => {
     return null;
 }
 
+export const loginByEmail = async (email) => {
+    if (!email) {
+        return null;
+    }
+
+    const result = await request('/login/email', {
+        'method': 'POST',
+        'headers': {'Content-Type': 'application/json'},
+        'body': JSON.stringify({
+            'email': email
+        })
+    });
+    return result;
+}
+
 export const loginFromToken = async (token) => {
     const user = await request('/profile/me', {
         'method': 'GET',
@@ -130,6 +160,11 @@ export const loginFromToken = async (token) => {
           'Authorization': `Bearer ${token}`
         },
     });
+
+    if (user) {    
+        setUserToken(token);
+    }
+
     return userFormatter(user);
 }
 

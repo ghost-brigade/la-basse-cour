@@ -1,4 +1,3 @@
-import { getByTitle } from "@testing-library/react";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { 
@@ -13,8 +12,11 @@ import CurrentUserContext from "../contexts/user/CurrentUserContext";
 import { getMenuLinks, getTitle } from "../utils/route_management";
 import { useTracking } from 'react-tracking';
 import { sendLog } from "../utils/log_management";
+import ModalContext from "../contexts/modal/ModalContext";
+import ModalContainer from "../components/modal/ModalContainer";
 
 const Layout = (props) => {
+    const {modal} = useContext(ModalContext);
     const { trackEvent } = useTracking(
         {service: 'client'},
         {dispatch: data => sendLog(data, 'navigation')}
@@ -82,6 +84,7 @@ const Layout = (props) => {
                 </header>
 
                 <div className="app_main-content">
+                    {modal ? <ModalContainer/> : ''}
                     <Outlet/>
                 </div>
             </main>

@@ -70,10 +70,23 @@ User.init({
             },
         },
     },
+    img: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+    },
+    settings: {
+        type: DataTypes.JSON(),
+        allowNull: true,
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
+    },
+    isBanned: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
     },
     updatedAt: {
         type: DataTypes.DATE,

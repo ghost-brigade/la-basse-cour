@@ -40,7 +40,6 @@ const RegisterPage = (props) => {
 
         const user = await register(values);
         if (user) {
-            setCurrentUser(user);
             navigate('/');
         }
     }

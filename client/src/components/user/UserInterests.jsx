@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { getAllThemes } from "../../utils/discussion_management";
 
 
 const UserInterests = (props) => {
@@ -40,10 +41,10 @@ const UserInterests = (props) => {
                 : ''
             }
             <div className="form-group">
-                <label htmlFor="technologies">Choisir des intérêts supplémentaires</label>
+                <label htmlFor="technologies">{props.selectionTitle}</label>
                 <select className="form-control" id="technologies" name='technologies' onChange={handleChangeInterest}>
                     <option>Sélectionnez une technologie</option>
-                    {allTechnologies.filter(technology => {
+                    {getAllThemes().filter(technology => {
                         return !props.user.technologies 
                             || props.user.technologies.length === 0 
                             || !props.user.technologies.includes(technology)
@@ -58,42 +59,8 @@ const UserInterests = (props) => {
 }
 
 UserInterests.defaultProps = {
-    title: 'Mes centres d\'intérêt'
+    title: 'Mes centres d\'intérêt',
+    selectionTitle: 'Choisir des intérêts supplémentaires',
 }
 
 export default UserInterests;
-
-
-
-const allTechnologies = [
-    'Bootstrap', 'Tailwind CSS', 'Bulma', 'Foundation', 'Primer CSS', 'Spectre CSS', 'Materialize CSS', 'Onsen UI', 'Semantic UI', 'Blaze UI', 'Pure CSS', 'Tachyons', 'CSS', 'Preprocessors', 'SASS', 'LESS',
-    'ES6',
-    'TypeScript',
-    'AngularJS',
-    'VueJS',
-    'Nuxt.js',
-    'jQuery',
-    'jQuery UI',
-    'jQuery Mobile',
-    'ReactJS',
-    'Next.js',
-    'React Desktop',
-    'React Suite',
-    'React Material UI', 
-    'PHP',
-    'Laravel',
-    'WordPress',
-    'NodeJS',
-    'Python',
-    'Django',
-    'Ruby',
-    'Ruby on Rails',
-    'Java',
-    'Spring',
-    'Hibernate',
-    '.NET',
-    'Postgre SQL',
-    'MariaDB',
-    'MySQL',
-    'MongoDB'
-];
