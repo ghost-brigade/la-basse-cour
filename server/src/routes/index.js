@@ -23,11 +23,6 @@ router.use('/friend', AuthentificationMiddleware, friendRouter);
 router.use('/profile', AuthentificationMiddleware, profileRouter);
 router.use('/discussion', AuthentificationMiddleware, discussionRouter);
 
-router.get('/test', async (req, res) => {
-
-    return Response.ok(req, res, "DQSDEZSQF");
-});
-
 router.get('*', async (req, res) => {
     return Response.notFound(req, res, "Page not found");
 });

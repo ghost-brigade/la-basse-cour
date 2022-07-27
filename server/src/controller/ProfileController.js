@@ -1,5 +1,6 @@
 import * as Response from "../service/Http/Response.js";
 import * as UserRepository from "../repository/UserRepository.js";
+import * as ReportRepository from "../repository/ReportRepository.js";
 
 const me = async (req, res) => {
     const user = await UserRepository.find(req.user.id);
@@ -69,7 +70,39 @@ const update = async (req, res) => {
 
 }
 
+const report = async (req, res) => {
+    if(req.body === undefined || req.body.addresseeId === undefined || req.body.reason === undefined || req.body.comment === undefined) {
+        return Response.unprocessableEntity(req, res, "Missing parameters");
+    }
+
+    if(req.body.addresseeId === req.user.id) {
+        return Response.unprocessableEntity(req, res, "You can't report yourself");
+    }
+
+    const reportAlreadyExists = await ReportRepository.findAlreadyExist(req.user.id, req.body.addresseeId, reason);
+
+    if(reportAlreadyExists) {
+        return Response.unprocessableEntity(req, res, "You already reported this user for this reason");
+    }
+
+    const {addresseeId, reason, comment} = req.body;
+
+    try {
+        const report = await ReportRepository.create({
+            requesterId: req.user.id,
+            addresseeId: addresseeId,
+            reason: reason,
+            comment: comment,
+        });
+
+        return Response.created(req, res, "Report created");
+    } catch (err) {
+        return Response.unprocessableEntity(req, res, err.message);
+    }
+}
+
 export {
     me,
-    update
+    update,
+    report,
 };
