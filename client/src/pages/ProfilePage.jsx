@@ -38,7 +38,7 @@ const ProfilePage = (props) => {
         setUserEdited({
             ...userEdited, 
             ['img']: profileImage.img, 
-            ['imgId']: profileImage.imgId
+            ['imgId']: profileImage.id
         });
     }
 
@@ -48,13 +48,11 @@ const ProfilePage = (props) => {
         const editedValues = {};
         for (const key in userEdited) {
             if (currentUser[key] !== userEdited[key]) {
-                if (key !== 'imgId') {
-                    if (key === 'img') {
-                        editedValues.img = userEdited.imgId;
-                    }
-                    editedValues[key] = userEdited[key];
-                }
+                editedValues[key] = userEdited[key];
             }
+        }
+        if (editedValues.img) {
+            editedValues.img = editedValues.imgId;
         }
 
         const user = await updateUser(currentUser, editedValues);
@@ -86,7 +84,7 @@ const ProfilePage = (props) => {
             <form onSubmit={handleSubmit}>
                 <UserProfileSelector
                     isEditing={isEditing} 
-                    actualImg={{'id': userEdited.imgId, 'img': userEdited.img}}
+                    actualImg={{'imgId': userEdited.imgId, 'img': userEdited.img}}
                     handleChange={handleChangeImage}
                 />
                 <div className="my-2">
