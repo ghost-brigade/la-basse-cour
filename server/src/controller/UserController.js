@@ -22,13 +22,15 @@ const get = async (req, res) => {
 
     try {
         const user = await UserRepository.find(req.params.id);
-        
+
         return Response.ok(req, res, {
                 id: user.id,
                 firstname: user.firstname,
                 lastname: user.lastname,
                 technologies: user.technologies,
                 schoolBranch: user.schoolBranch,
+                img: user.img,
+                settings: user.settings,
         });
     } catch (err) {
         Response.notFound(req, res, 'User not found');

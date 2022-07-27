@@ -44,7 +44,7 @@ const findAll = async (id) => {
     return users;
 }
 
-const create = async (email, password, firstname, lastname, technologie, schoolBranch) => {
+const create = async (email, password, firstname, lastname, technologie, schoolBranch, img, settings) => {
     await User.create({
         'email': email,
         'password': password,
@@ -52,6 +52,8 @@ const create = async (email, password, firstname, lastname, technologie, schoolB
         'lastname': lastname,
         'technologies': technologie,
         'schoolBranch': schoolBranch,
+        'img': img,
+        'settings': settings
     });
     const findUser = await User.findOne({ where: { email: email } });
     await UserMongo.create(findUser.dataValues);

@@ -3,7 +3,7 @@ const UserProfile = (props) => {
         <>
             <UserProfileSelector
                 isEditing={isEditing} 
-                actualImg={userEdited.img}
+                actualImg={userEdited}
                 handleChange={handleChangeImage}
             />
             <div className="my-2">

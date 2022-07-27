@@ -70,6 +70,14 @@ User.init({
             },
         },
     },
+    img: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+    },
+    settings: {
+        type: DataTypes.JSON(),
+        allowNull: true,
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

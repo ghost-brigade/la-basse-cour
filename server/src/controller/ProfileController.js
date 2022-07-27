@@ -41,6 +41,9 @@ const update = async (req, res) => {
         }
     }
 
+    if(req.body.img) { user.img = req.body.img; }
+    if(req.body.settings) { user.settings = req.body.settings; }
+
     if(req.body.password && req.body.newPassword && req.body.passwordConfirmation) {
         const passwordUpdator = await import("../service/Security/PasswordUpdator.js");
 
