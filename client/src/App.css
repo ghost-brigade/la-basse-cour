@@ -892,3 +892,22 @@ section.app_characters_grid {
     max-height: calc(100vh - 150px);
   }
 }
+
+.app_modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 200;
+  background-color: var(--color_background-secondary-transparent);
+}
+.app_modal-container .app_modal {
+  min-width: 400px;
+  padding: 2em;
+  border-radius: 1em;
+  background-color: var(--color_background);
+}
