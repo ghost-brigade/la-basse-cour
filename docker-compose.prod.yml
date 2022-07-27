@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+
+  client:
+    build: ./client/
+    volumes:
+      - ./client:/app
+    ports:
+      - 5000:3000
+
+  server:
+    build: ./server
+    volumes:
+      - ./server:/app
+    ports:
+      - 3000:3000
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo:/data/db
+      
+  postgres:
+    image: postgres:13-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    volumes:
+      - 'postgres:/var/lib/postgresql/data:rw'
+
+  phppgadmin:
+    image: docker.io/bitnami/phppgadmin:7
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    environment:
+      - DATABASE_HOST=postgres
+    ports:
+      - 8000:8080
+      
+volumes:
+  postgres: 
+  mongo:
