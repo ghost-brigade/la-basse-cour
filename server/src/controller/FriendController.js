@@ -81,7 +81,7 @@ const status = async (req, res) => {
             }
             if(friendship.addresseeId === req.user.id) {
                 await friendManager.statusUpdate(req.user.id, addresseeId, status);
-                return Response.ok(req, res, {message: "Status updated"});
+                return Response.ok(req, res, friendship);
             }
         } else {
             return Response.notFound(req, res, "Friendship doesn't exist");

@@ -11,8 +11,8 @@ export const env = {
         'port': 587,
         'secure': false,
         'auth': {
-            'user': 'shemar40@ethereal.email',
-            'pass': 'eDntfWpCnFWMQV1psX'
+            'user': null,
+            'pass': null
         }
     },
     'secret': 'UkozsMpFEUMnpYakfo7bKdzEb7h8qjVrSBxJAg',

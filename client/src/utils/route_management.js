@@ -3,9 +3,9 @@ import StatisticsPage from '../pages/StatisticsPage';
 import DiscussionsPage from '../pages/DiscussionsPage';
 import ProfilePage from '../pages/ProfilePage';
 import RelationsPage from '../pages/RelationsPage';
-import LoginPage from '../pages/LoginPage';
 import RelationsAddPage from '../pages/RelationAddPage';
 import AdminPage from '../pages/AdminPage';
+import DiscussionAddPage from '../pages/DiscussionAddPage';
 
 export const appPages = [
     {
@@ -24,6 +24,15 @@ export const appPages = [
         iconClassNames: ['fa fa-comment'], 
         element: <DiscussionsPage />,
         visibleMenu: () => true,
+        userAccess: (user) => isConnected(user),
+    },
+    {
+        id: 'discussions', 
+        path: '/discussions/search', 
+        label: 'Discussions',
+        iconClassNames: ['fa fa-comment'], 
+        element: <DiscussionAddPage />,
+        visibleMenu: () => false,
         userAccess: (user) => isConnected(user),
     },
     {
@@ -50,7 +59,7 @@ export const appPages = [
         label: 'Statistiques',
         iconClassNames: ['fa fa-pie-chart'], 
         element: <StatisticsPage />,
-        visibleMenu: () => true,
+        visibleMenu: (user) => isGranted(user, ['admin']),
         userAccess: (user) => isConnected(user) && isGranted(user, ['admin']),
     },
     {
@@ -90,6 +99,10 @@ const isGranted = (user, roles) => {
     }
 
     return user.roles.some(role => roles.includes(role));
+}
+
+export const getRoutes = (user) => {
+    return appPages.filter(page => page.userAccess(user));
 }
 
 export const getMenuLinks = (user) => {

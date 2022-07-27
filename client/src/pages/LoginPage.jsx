@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import SendButton from "../components/form/SendButton";
 import CurrentUserContext from "../contexts/user/CurrentUserContext";
-import { login } from "../utils/user_management";
+import { login, loginByEmail } from "../utils/user_management";
 import icon_site from '../assets/images/icon_site.png';
 import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage = (props) => {
     const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
     const [values, setValues] = useState({});
+    const [connectWithEmail, setConnectWithEmail] = useState(true);
     let navigate = useNavigate();
 
     useEffect(() => {
@@ -29,11 +30,20 @@ const LoginPage = (props) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const user = await login(values);
-        if (user) {
-            setCurrentUser(user);
-            navigate('/');
+        if (connectWithEmail) {
+            const emailSent = await loginByEmail(values.email);
+            console.log(emailSent);
+        } else {
+            const user = await login(values);
+            if (user) {
+                setCurrentUser(user);
+                navigate('/');
+            }
         }
+    }
+
+    const handleChangeConnectWithEmail = (event) => {
+        setConnectWithEmail(event.target.checked);
     }
 
     return (
@@ -54,19 +64,35 @@ const LoginPage = (props) => {
                             onChange={handleChangeForm}
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Mot de passe</label> 
+                    <div className="custom-control custom-switch">
                         <input 
-                            type='password'
-                            id='password'
-                            className="form-control"
-                            value={values.password}
-                            onChange={handleChangeForm}
+                            type="checkbox" 
+                            className="custom-control-input" 
+                            id="sendEmail_switch" 
+                            checked={connectWithEmail} 
+                            onChange={handleChangeConnectWithEmail}
                         />
+                        <label className="custom-control-label" htmlFor="sendEmail_switch">Envoyer un lien à mon adresse mail</label>
                     </div>
-                    <Link to='/forgotten-password'>
-                        <small id="emailHelp" className="form-text text-muted">Mot de passe oublié ?</small>
-                    </Link>
+                    {
+                        connectWithEmail
+                        ? ''
+                        : <>
+                            <div className="form-group mt-4">
+                                <label htmlFor="password">Mot de passe</label> 
+                                <input 
+                                    type='password'
+                                    id='password'
+                                    className="form-control"
+                                    value={values.password}
+                                    onChange={handleChangeForm}
+                                />
+                            </div>
+                            <Link to='/forgotten-password'>
+                                <small id="emailHelp" className="form-text text-muted">Mot de passe oublié ?</small>
+                            </Link>
+                        </>
+                    }
                     <div className="app_buttons-container">
                         <SendButton />
                         <Link to="/register">

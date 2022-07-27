@@ -278,6 +278,22 @@ section.app_grid {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1em;
 }
+section.app_themes-grid .app_themes-list {
+  max-height: 55px;
+  overflow: auto;
+  transition: 0.5s;
+}
+section.app_themes-grid.opened .app_themes-list {
+  max-height: 80vh;
+}
+
+.app_open-indicator {
+  transform: rotate(0);
+  transition: 0.5s;
+}
+.opened .app_open-indicator {
+  transform: rotate(180deg);
+}
 
 .app_card {
   position: relative;
@@ -480,6 +496,7 @@ section.app_characters_grid {
   width: 100%;
   height: 100vh;
   max-height: calc(100vh - 220px);
+  padding-bottom: 1em;
 }
 .app_discussion-messages {
   position: relative;
@@ -621,12 +638,14 @@ section.app_characters_grid {
   justify-content: space-between;
 }
 
-.app_discussion-image {
+.app_discussion-image,
+.app_discussion-themes {
   position: relative;
   display: inline-flex;
   align-items: center;
 }
-.app_discussion-image-users-count {
+.app_discussion-image-users-count,
+.app_discussion-themes-count {
   min-width: 30px;
   min-height: 30px;
   display: flex;
@@ -635,7 +654,8 @@ section.app_characters_grid {
   background-color: var(--color_secondary);
   border-radius: 50%;
 }
-.app_discussion-image-users {
+.app_discussion-image-users,
+.app_discussion-themes-list  {
   position: absolute;
   top: 40px;
   display: inline-flex;
@@ -644,12 +664,14 @@ section.app_characters_grid {
   border-top-left-radius: 0;
   background-color: var(--color_background-secondary);
   transition: 0.5s;
+  z-index: 5;
   
   opacity: 0;
   gap: 0;
   padding: 0 1em;
 }
-.app_discussion-image-user-preview {
+.app_discussion-image-user-preview,
+.app_discussion-theme-preview {
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -669,12 +691,14 @@ section.app_characters_grid {
   max-width: 50px;
 }
 
-.app_discussion-image:hover .app_discussion-image-users {
+.app_discussion-image:hover .app_discussion-image-users,
+.app_discussion-themes:hover .app_discussion-themes-list {
   opacity: 1;
   gap: 0.5em;
   padding: 0.5em 1em;
 }
-.app_discussion-image:hover .app_discussion-image-user-preview {
+.app_discussion-image:hover .app_discussion-image-user-preview,
+.app_discussion-themes:hover .app_discussion-theme-preview {
   opacity: 1;
   max-height: 50px;
 }
@@ -725,19 +749,27 @@ section.app_characters_grid {
   color: white;
   text-shadow: 0 0 20px black;
 }
-.app_profile-interests-list {
+.app_profile-interests-list,
+.app_selecting-list {
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
   margin: 1em 0;
 }
-.app_profile-interest {
+.app_profile-interest,
+.app_selecting-list-element {
   display: flex;
   align-items: center;
   gap: 1em;
   padding: 0.5em 1em;
   border-radius: 1em;
   background-color: var(--color_background-secondary);
+}
+.app_selecting-list-element img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0.5em 0;
 }
 .app_profile-interest i.fa,
 .icon_rounded {
@@ -823,6 +855,11 @@ section.app_characters_grid {
   justify-content: space-between;
   align-items: center;
 }
+.app_title-mutliple-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
 
 @media screen and (min-width: 780px) {
   #root {
@@ -873,7 +910,7 @@ section.app_characters_grid {
   .app_discussions-list {
     max-width: 400px;
     height: 100vh;
-    max-height: calc(100vh - 150px);
+    max-height: calc(100vh - 180px);
     overflow: auto;
   }
   .app_discussions-list .app_discussion-preview {
@@ -889,7 +926,8 @@ section.app_characters_grid {
     transform: translateX(10px);
   }
   .app_discussions .app_discussion {
-    max-height: calc(100vh - 150px);
+    max-height: calc(100vh - 180px);
+    padding-bottom: 0;
   }
 }
 
@@ -910,4 +948,23 @@ section.app_characters_grid {
   padding: 2em;
   border-radius: 1em;
   background-color: var(--color_background);
+}
+
+.app_stats-double-columns-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+.app_stats-column-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+input, select, textarea {
+  color: var(--color_text) !important;
+  background-color: var(--color_background-secondary) !important;
+  border: 0 !important;
 }

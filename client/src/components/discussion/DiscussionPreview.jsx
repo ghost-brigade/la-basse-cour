@@ -21,16 +21,18 @@ const DiscussionPreview = (props) => {
             className={`app_card app_card-colored app_discussion-preview ${selected ? 'selected': ''}`}
         >
             {getDiscussionTitle(discussion, currentUser)}
-            <OptionsWrapper>
-                <ul>
-                    <li onClick={handleLeaveDiscussion}>
-                        <i className="fa fa-edit"/> Quitter
-                    </li>
-                    <li className="app_content-delete">
-                        <i className="fa fa-trash"/> Supprimer
-                    </li>
-                </ul>
-            </OptionsWrapper>
+            {props.children}
+            {
+                discussion.users.map(user => user.id).includes(currentUser.id)
+                    ? <OptionsWrapper>
+                        <ul>
+                            <li onClick={handleLeaveDiscussion}>
+                                <i className="fa fa-edit"/> Quitter
+                            </li>
+                        </ul>
+                    </OptionsWrapper>
+                    : ''
+                }
         </div>
     )
 }
