@@ -19,7 +19,7 @@ const UserProfileSelector = (props) => {
                     isEditing
                     ? <div className="app_user-profile-selector-choices">
                         {allProfileImages
-                            .map(profileImage => <div key={`img_container_${profileImage.id}`} className={profileImage.id === actualImg.id ? 'selected' : ''}>
+                            .map(profileImage => <div key={`img_container_${profileImage.id}`} className={profileImage.id === actualImg.imgId ? 'selected' : ''}>
                                 <img src={profileImage.img} onClick={() => handleChange(profileImage)}/>
                             </div>)}
                     </div>

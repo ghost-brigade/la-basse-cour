@@ -35,8 +35,12 @@ export const getAllProfileImages = () => {
 }
 
 export const getImageFromId = (id) => {
-    console.log(id);
-    return getAllProfileImages().filter(imageData => imageData.id === id)[0].img;
+    const matchingImages = getAllProfileImages().filter(imageData => imageData.id === id);
+    if (matchingImages && matchingImages.length) {
+        return matchingImages[0].img;
+    } else {
+        return icon_chicken;
+    }
 }
 
 export const userFormatter = (user) => {
@@ -45,14 +49,17 @@ export const userFormatter = (user) => {
     }
 
     const imgId = user.img ? user.img : 'icon_chicken';
+    const realImg = getImageFromId(imgId);
 
-    return {
+    const userFormatted = {
         'roles': [],
-        'imgId': imgId,
-        'img': icon_chicken, //getImageFromId(imgId),
         'technologies': user.technologies ? user.technologies : [],
-        ...user
+        ...user,
+        'imgId': imgId,
+        'img': realImg,
     }
+
+    return userFormatted;
 }
 
 export const getAllUsers = async () => {
