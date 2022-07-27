@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.get('/', DataController.list);
 router.get('/status_count', DataController.statusCount);
-router.get('/visit_today', DataController.visitToday);
+router.post('/visit_by_date', DataController.visitByDate);
 router.get('/visit_by_hour', DataController.visitByHour);
+router.get('/users_by_date', DataController.usersByDate);
 
 export default router;

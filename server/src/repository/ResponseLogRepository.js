@@ -1,24 +1,33 @@
-import {ResponseLog} from "../model/index.js";
+import {ResponseLog, UserMongo} from "../model/index.js";
 
-const getVisitToday = async () => {
+const getVisitByDate = async (date) => {
+    const lteDate = new Date(date);
+    const gteDate = new Date(date.setDate(date.getDate() - 1));
 
-    const visitToday = await ResponseLog.countDocuments({
+    const visitDate = await ResponseLog.countDocuments({
         "createdAt": {
-            "$gte": new Date(new Date().setDate(new Date().getDate() - 1)),
-            "$lte": new Date()
+            "$gte": gteDate,
+            "$lte": lteDate
         }
     })
 
-    if(visitToday.length > 0) {
-        return visitToday;
+    if(visitDate.length > 0) {
+        return visitDate;
     }
 
-    return visitToday;
+    return visitDate;
 }
 
 const getVisitByHour = async () => {
+    const tomorrowDate = new Date(new Date().setDate(new Date().getDate() - 1));
+    tomorrowDate.setHours('00', '00', '00', '000');
 
     const visitByHour = await ResponseLog.aggregate([
+        {
+            $match: {
+                createdAt: {$gte: tomorrowDate}
+            }
+        },
         {
             $addFields: {
                 hour: {
@@ -40,6 +49,17 @@ const getVisitByHour = async () => {
                 _id: {hour: "$hour", date: "$date"},
                 count: { $sum: 1 },
             }
+        },
+        {
+            $group: {
+                _id: "$_id.date",
+                hours: {
+                    $push: {
+                        hour: "$_id.hour",
+                        count: "$count"
+                    }
+                }
+            }
         }
     ]);
 
@@ -51,7 +71,6 @@ const getVisitByHour = async () => {
 }
 
 const getStatusCount = async () => {
-
     const statusCount = await ResponseLog.aggregate([
         {
             $match: {
@@ -77,8 +96,55 @@ const getStatusCount = async () => {
     return statusCount;
 }
 
+const getUsersByDate = async () => {
+    const tomorrowDate = new Date(new Date().setDate(new Date().getDate() - 1));
+    tomorrowDate.setHours('00', '00', '00', '000');
+
+    return await UserMongo.aggregate([
+        {
+            $match: {
+                createdAt: {$gte: tomorrowDate}
+            }
+        },
+        {
+            $addFields: {
+                hour: {
+                    $dateToString: {
+                        format: "%H",
+                        date: "$createdAt"
+                    }
+                },
+                date: {
+                    $dateToString: {
+                        format: "%Y-%m-%d",
+                        date: "$createdAt"
+                    }
+                }
+            }
+        },
+        {
+            $group: {
+                _id: {hour: "$hour", date: "$date"},
+                count: { $sum: 1 },
+            }
+        },
+        {
+            $group: {
+                _id: "$_id.date",
+                hours: {
+                    $push: {
+                        hour: "$_id.hour",
+                        count: "$count"
+                    }
+                }
+            }
+        }
+    ]);
+}
+
 export {
     getStatusCount,
-    getVisitToday,
-    getVisitByHour
+    getVisitByDate,
+    getVisitByHour,
+    getUsersByDate
 };

@@ -11,6 +11,7 @@ const schema = new MongoFactory.Schema({
     img: String,
     settings: Object,
     isBanned: Boolean,
+    createdAt: Date,
 });
 
 const User = new MongoFactory.model("user", schema);

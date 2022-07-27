@@ -8,11 +8,6 @@ const StatisticsAreaCard = (props) => {
         return dataKey !== 'name';
     });
 
-    console.log(dataKeys.map((dataKey, index) => {
-        console.log(`color${dataKey}`);
-        console.log(colors[index]);
-    }))
-
     return (
         <div className="app_card app_card-colored" style={{flex: 1}}>
             <h2>{props.title}</h2>
@@ -23,14 +18,10 @@ const StatisticsAreaCard = (props) => {
                     <defs>
                         {
                             dataKeys.map((dataKey, index) => {
-                                console.log(`color${dataKey}`);
-                                console.log(colors[index]);
-                                return <>
-                                    <linearGradient id={`color${dataKey}`} x1="0" y1="0" x2="0" y2="1">
+                                return <linearGradient key={`color${dataKey}`} id={`color${dataKey}`} x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor={colors[index]} stopOpacity={0.8}/>
                                         <stop offset="95%" stopColor={colors[index]} stopOpacity={0}/>
                                     </linearGradient>
-                                </>
                             })
                         }
                     </defs>

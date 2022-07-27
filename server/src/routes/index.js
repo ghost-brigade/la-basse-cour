@@ -24,7 +24,7 @@ router.use('/message', AuthentificationMiddleware, messageRouter);
 router.use('/friend', AuthentificationMiddleware, friendRouter);
 router.use('/profile', AuthentificationMiddleware, profileRouter);
 router.use('/discussion', AuthentificationMiddleware, discussionRouter);
-router.use('/data', AuthentificationMiddleware, dataRouter);
+router.use('/data', AuthentificationMiddleware, hasRolesAdmin, dataRouter);
 router.use('/admin', AuthentificationMiddleware, hasRolesAdmin, adminRouter);
 
 router.get('*', async (req, res) => {

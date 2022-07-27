@@ -17,9 +17,15 @@ const statusCount = async (req, res) => {
     }
 }
 
-const visitToday = async (req, res) => {
+const visitByDate = async (req, res) => {
     try {
-        const visitToday = await ResponseLogRepository.getVisitToday();
+        let date = new Date();
+        
+        if (req.body !== undefined && req.body.date !== undefined) {
+            date = new Date(req.body.date);
+        }
+
+        const visitToday = await ResponseLogRepository.getVisitByDate(date);
         return res.json(visitToday);
     } catch (err) {
         return Response.error(req, res, err.message);
@@ -35,4 +41,13 @@ const visitByHour = async (req, res) => {
     }
 }
 
-export { list, statusCount, visitToday, visitByHour };
+const usersByDate = async (req, res) => {
+    try {
+        const usersByDate = await ResponseLogRepository.getUsersByDate();
+        return res.json(usersByDate);
+    } catch (err) {
+        return Response.error(req, res, err.message);
+    }
+}
+
+export { list, statusCount, visitByDate, visitByHour, usersByDate };

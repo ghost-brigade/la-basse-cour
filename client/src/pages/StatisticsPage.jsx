@@ -1,6 +1,7 @@
 import StatiticsNumberCard from '../components/statistics/StatisticsNumberCard';
 import { useEffect, useState } from 'react';
 import StatisticsAreaCard from '../components/statistics/StatisticsAreaCard';
+import { getStatusCount, getUsersByDate, getVisitDate, getVisitHour, getVisitToday } from '../utils/data_management';
 
 const data = [
     {
@@ -41,133 +42,137 @@ const data = [
 ];
 
 const StatisticsPage = (props) => {
-    const [width, setWidth] = useState(window.innerWidth);
+    const [statusCount, setStatusCount] = useState(null);
+    const [visitToday, setVisitToday] = useState(null);
+    const [visitYesterday, setVisitYesterday] = useState(null);
+    const [visitHour, setVisitHour] = useState(null);
+    const [usersDate, setUsersDate] = useState(null);
 
     useEffect(() => {
-        window.onresize = () => {
-            setWidth(width);
-        }
-    });
+        initStatusCount();
+        initVisitToday();
+        initVisitHour();
+        initUsersDate();
+    }, []);
+
+    const initStatusCount = async () => {
+        const data = await getStatusCount();
+        setStatusCount(data);
+    }
+
+    const initVisitToday = async () => {
+        const data = await getVisitToday();
+        const todayDate = new Date();
+        setVisitToday(data);
+        // set yesterday date
+        const yesterdayDate = todayDate.setDate(todayDate.getDate() - 1);
+        const yesterdayData = await getVisitDate(yesterdayDate);
+        setVisitYesterday(yesterdayData);
+    }
+
+    const initVisitHour = async () => {
+        const data = await getVisitHour();
+        setVisitHour(
+            transformCreationHour(data, 4)
+        );
+    }
+
+    const initUsersDate = async () => {
+        const data = await getUsersByDate();
+        console.log(data);
+        setUsersDate(
+            transformCreationHour(data)
+        );
+    }
 
     return (
         <>
             <section className="app_grid">
-                <StatiticsNumberCard
-                    title='Views'
-                    value={{
-                    'actual': 276.5,
-                    'previous': 240,
-                    'unit': 'K',
-                    }}
-                />
-                <StatiticsNumberCard
-                    title='Watch time'
-                    value={{
-                    'actual': 4.2,
-                    'previous': 4.1,
-                    'unit': ' hours',
-                    }}
-                />
-                <StatiticsNumberCard
-                    title='Estimate revenue'
-                    value={{
-                    'actual': 320,
-                    'previous': 220,
-                    'unit': '$',
-                    }}
-                />
-            </section>
-            <section className="app_grid">
-                <StatisticsAreaCard data={data} title={'Nombre de connexion'}/>
+                {
+                    visitHour
+                        ? <StatisticsAreaCard data={visitHour} title={'Connexion par heure'}/>
+                        : ''
+                }
+                {
+                    usersDate
+                        ? <StatisticsAreaCard data={usersDate} title={'Création de compte'}/>
+                        : ''
+                }
                 <div className='app_stats-double-columns-container'>
                     <div className="app_stats-column-container">
                         <StatiticsNumberCard
-                            title='Subscribers'
+                            title="Visites aujourd'hui"
                             value={{
-                            'actual': 8.2,
-                            'previous': 8.4,
-                            'unit': 'K',
-                            }}
-                        />
-                        <StatiticsNumberCard
-                            title='Estimate revenue'
-                            value={{
-                            'actual': 320,
-                            'previous': 220,
-                            'unit': '$',
-                            }}
-                        />
-                        <StatiticsNumberCard
-                            title='Estimate revenue'
-                            value={{
-                            'actual': 320,
-                            'previous': 220,
-                            'unit': '$',
+                                'actual': visitToday,
+                                'previous': visitYesterday,
+                                'unit': '',
                             }}
                         />
                     </div>
-                    <StatisticsAreaCard data={data} title={'Nombre de connexion'}/>
+                    {
+                        true ? '' : <StatisticsAreaCard data={data} title={'Nombre de connexion'}/>
+                    }
                 </div>
-            </section>
-            <section className="app_grid">
-                <div className='app_stats-double-columns-container'>
-                    <div className="app_stats-column-container">
-                        <StatiticsNumberCard
-                            title='Views'
-                            value={{
-                            'actual': 276.5,
-                            'previous': 240,
-                            'unit': 'K',
-                            }}
-                        />
-                        <StatiticsNumberCard
-                            title='Watch time'
-                            value={{
-                            'actual': 4.2,
-                            'previous': 4.1,
-                            'unit': ' hours',
-                            }}
-                        />
-                        <StatiticsNumberCard
-                            title='Estimate revenue'
-                            value={{
-                            'actual': 320,
-                            'previous': 220,
-                            'unit': '$',
-                            }}
-                        />
-                    </div>
-                    <div className="app_stats-column-container">
-                        <StatiticsNumberCard
-                            title='Subscribers'
-                            value={{
-                            'actual': 8.2,
-                            'previous': 8.4,
-                            'unit': 'K',
-                            }}
-                        />
-                        <StatiticsNumberCard
-                            title='Estimate revenue'
-                            value={{
-                            'actual': 320,
-                            'previous': 220,
-                            'unit': '$',
-                            }}
-                        />
-                        <StatiticsNumberCard
-                            title='Estimate revenue'
-                            value={{
-                            'actual': 320,
-                            'previous': 220,
-                            'unit': '$',
-                            }}
-                        />
-                    </div>
-                </div>
-                <StatisticsAreaCard data={data} title={'Nombre de connexion'}/>
             </section>
         </>
     )
 }
 
 export default StatisticsPage;
+
+const transformCreationHour = (data, adjuster = 1) => {
+    const todayDate = new Date();
+    const todayStr = dateToStr(todayDate);
+
+    const hours = [];
+    for (let h = 0; h < 24; h++) {
+        const hour = {
+            'name': `${numberTo10(h)}:00`, 
+            "Aujourdhui": 0,
+            "Hier": 0,
+        };
+        
+        for (let index in data) {
+            const mongoHour = h - 2;
+            const singleData = data[index];
+            const dataFound = singleData.hours.find(
+                (hour) => hour.hour == (mongoHour < 0 ? h + 22 : h - 2)
+            );
+            if (dataFound) {
+                const dataToAdd = Math.floor((dataFound.count ?? 0) / adjuster);
+                if (singleData._id === todayStr || mongoHour < 0) {
+                    hour["Aujourdhui"] += dataToAdd;
+                } else {
+                    hour["Hier"] += dataToAdd;
+                }
+            }
+        }
+
+        hours.push(hour);
+    }
+    return hours;
+}
+
+const changeTimeZone = (date, timeZone) => {
+    if (typeof date === 'string') {
+        return new Date(
+            new Date(date).toLocaleString('en-US', {
+                timeZone,
+            }),
+        );
+    }
+  
+    return new Date(
+        date.toLocaleString('en-US', {
+            timeZone,
+        }),
+    );
+}
+
+const dateToStr = (date) => {
+    return `${date.getFullYear()}-${numberTo10(date.getMonth() + 1)}-${numberTo10(date.getDate())}`;
+}
+
+const numberTo10 = (nbr) => {
+    return nbr < 10 ? `0${nbr}` : nbr;
+}
