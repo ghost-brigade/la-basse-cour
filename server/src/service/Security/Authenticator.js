@@ -11,6 +11,14 @@ const authentification = async (email, password) => {
         throw new Error('Password or email are incorrect');
     }
 
+    if(user.deletedAt !== null) {
+        throw new Error('Error you can not login because your account is deleted');
+    }
+
+    if(user.isBanned === true) {
+        throw new Error('You are banned');
+    }
+
     return await createToken(user);
 }
 
