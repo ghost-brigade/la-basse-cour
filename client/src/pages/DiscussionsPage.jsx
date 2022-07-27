@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useContext, useState } from 'react';
 import Discussion from '../components/discussion/Discussion';
+import DiscussionAddButton from '../components/discussion/DiscussionAddButton';
 import DiscussionPreview from '../components/discussion/DiscussionPreview';
 import DiscussionContext from '../contexts/discussion/DiscussionContext';
 import CurrentUserContext from '../contexts/user/CurrentUserContext';
@@ -188,12 +189,15 @@ const DiscussionsPage = (props) => {
 
     return (
         <div className='app_discussions-page'>
-            {selectedDiscussion
-                ? <h2 onClick={unselectDiscussion}>
-                    <span ><i className='app_return-button fa fa-chevron-left'/> </span>
-                    Liste des discussions
+            {selectedDiscussion 
+                ? <h2 className='app_title-button' onClick={unselectDiscussion}>
+                    <span><i className='app_return-button fa fa-chevron-left'/> Liste des discussions</span>
+                    <DiscussionAddButton/>
                 </h2>
-                : <h2>Liste des discussions</h2>
+                : <h2 className='app_title-button'>
+                    Liste des discussions
+                    <DiscussionAddButton/>
+                </h2>
             }
             <div className='app_discussions'>
                 <section className={`app_discussions-list ${selectedDiscussion ? 'elementSelected': ''}`}>

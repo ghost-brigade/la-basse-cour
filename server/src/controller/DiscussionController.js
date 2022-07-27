@@ -19,6 +19,51 @@ const list = async (req, res) => {
     }
 }
 
+const listThemes = async (req, res) => {
+    if(req.body === undefined || req.body.themes === undefined) {
+        return Response.unprocessableEntity(req, res, "Missing parameters");
+    }
+
+    try {
+        const themes = req.body.themes;
+        const label = req.body.label;
+        let discussions = (await DiscussionRepository.findThemes(req.user.id, themes, label));
+
+        discussions.map(discussion => {
+            discussion.users = discussion.users.map(user => {
+                return '/user/' + user;
+            });
+            return discussion;
+        });
+        Response.ok(req, res, discussions);
+    } catch (err) {
+        Response.error(req, res, err.message);
+    }
+}
+
+
+const listAllThemes = async (req, res) => {
+    if(req.body === undefined || req.body.themes === undefined) {
+        return Response.unprocessableEntity(req, res, "Missing parameters");
+    }
+
+    try {
+        const themes = req.body.themes;
+        const label = req.body.label;
+        let discussions = (await DiscussionRepository.findThemes(null, themes, label));
+
+        discussions.map(discussion => {
+            discussion.users = discussion.users.map(user => {
+                return '/user/' + user;
+            });
+            return discussion;
+        });
+        Response.ok(req, res, discussions);
+    } catch (err) {
+        Response.error(req, res, err.message);
+    }
+}
+
 const create = async (req, res) => {
     if(req.body === undefined || req.body.users === undefined) {
         return Response.unprocessableEntity(req, res, "Missing parameters");
@@ -32,13 +77,43 @@ const create = async (req, res) => {
                 return Response.ok(req, res, existingDiscussion[0]);
             }
         }
-        let discussion = await DiscussionRepository.create(users, req.body.label ? req.body.label : null);
+        let discussion = await DiscussionRepository.create(
+            users, 
+            req.body.label ? req.body.label : null,
+            req.body.themes ? req.body.themes : []
+        );
 
         discussion.users = discussion.users.map(user => {
             return '/user/' + user;
         });
 
         return Response.created(req, res, discussion);
+    } catch (err) {
+        if(err instanceof ValidationError) {
+            return Response.unprocessableEntity(req, res, formatError(err));
+        } else {
+            return Response.error(req, res, err.message);
+        }
+    }
+}
+
+const join = async (req, res) => {
+    if(req.params === undefined || req.params.id === undefined) {
+        return Response.unprocessableEntity(req, res, "Missing parameters");
+    }
+
+    try {
+        let discussion = await DiscussionRepository.find(req.params.id);
+
+        if (discussion === null || !discussion instanceof Discussion) {
+            return Response.notFound(req, res, `Discussion ${req.params.id} not found`);
+        }
+
+        if (!discussion.users.includes(req.user.id)) {
+            discussion.users = [...discussion.users, req.user.id];
+        }
+
+        return Response.ok(req, res, await DiscussionRepository.update(discussion));
     } catch (err) {
         if(err instanceof ValidationError) {
             return Response.unprocessableEntity(req, res, formatError(err));
@@ -78,6 +153,9 @@ const leave = async (req, res) => {
 
 export {
     list,
+    listAllThemes,
+    listThemes,
     create,
+    join,
     leave
 };
