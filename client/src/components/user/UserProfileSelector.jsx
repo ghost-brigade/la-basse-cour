@@ -14,13 +14,13 @@ const UserProfileSelector = (props) => {
         <div>
             <h2 className="mb-2">Image de profil</h2>
             <div className="app_user-profile-selector">
-                <img className="actual" src={actualImg} alt='actual_profile_img'/>
+                <img className="actual" src={actualImg.img} alt='actual_profile_img'/>
                 {
                     isEditing
                     ? <div className="app_user-profile-selector-choices">
                         {allProfileImages
-                            .map(profileImage => <div key={`img_container_${profileImage}`} className={profileImage === actualImg ? 'selected' : ''}>
-                                <img src={profileImage} onClick={() => handleChange(profileImage)}/>
+                            .map(profileImage => <div key={`img_container_${profileImage.id}`} className={profileImage.id === actualImg.id ? 'selected' : ''}>
+                                <img src={profileImage.img} onClick={() => handleChange(profileImage)}/>
                             </div>)}
                     </div>
                     : ''

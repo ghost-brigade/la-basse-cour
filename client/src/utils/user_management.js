@@ -25,13 +25,18 @@ export const getAllSchoolBranches = () => {
 
 export const getAllProfileImages = () => {
     return [
-        icon_chicken,
-        icon_cow,
-        icon_donkey,
-        icon_pig,
-        icon_sheep,
-        icon_turkey,
+        {'id': 'icon_chicken', 'img': icon_chicken},
+        {'id': 'icon_cow', 'img': icon_cow},
+        {'id': 'icon_donkey', 'img': icon_donkey},
+        {'id': 'icon_pig', 'img': icon_pig},
+        {'id': 'icon_sheep', 'img': icon_sheep},
+        {'id': 'icon_turkey', 'img': icon_turkey},
     ];
+}
+
+export const getImageFromId = (id) => {
+    console.log(id);
+    return getAllProfileImages().filter(imageData => imageData.id === id)[0].img;
 }
 
 export const userFormatter = (user) => {
@@ -39,9 +44,12 @@ export const userFormatter = (user) => {
         return null;
     }
 
+    const imgId = user.img ? user.img : 'icon_chicken';
+
     return {
         'roles': [],
-        'img': icon_chicken,
+        'imgId': imgId,
+        'img': icon_chicken, //getImageFromId(imgId),
         'technologies': user.technologies ? user.technologies : [],
         ...user
     }
