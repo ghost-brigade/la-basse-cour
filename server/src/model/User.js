@@ -83,6 +83,11 @@ User.init({
         allowNull: false,
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
     },
+    isBanned: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
     updatedAt: {
         type: DataTypes.DATE,
         allowNull: true,

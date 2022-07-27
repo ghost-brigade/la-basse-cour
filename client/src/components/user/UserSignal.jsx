@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useState } from "react";
 import ModalContext from "../../contexts/modal/ModalContext";
-import { reportUser } from "../../utils/report_management";
+import { getReasons, reportUser } from "../../utils/report_management";
 import SendButton from "../form/SendButton";
 
 const UserSignal = (props) => {
@@ -38,9 +38,11 @@ const UserSignal = (props) => {
                     value={reason}
                 >
                     <option>Choisir la raison</option>
-                    <option value="harassment">Harcèlement</option>
-                    <option value="fake_profile">Faux profil</option>
-                    <option vlaue="others">Autre</option>
+                    {getReasons().map(reason => 
+                        <option key={`reason_${reason.id}`} value={reason.id}>
+                            {reason.label}
+                        </option>
+                    )}
                 </select>
             </div>
             <div className="form-group">
