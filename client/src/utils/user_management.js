@@ -122,6 +122,21 @@ export const login = async (credentials) => {
     return null;
 }
 
+export const loginByEmail = async (email) => {
+    if (!email) {
+        return null;
+    }
+
+    const result = await request('/login/email', {
+        'method': 'POST',
+        'headers': {'Content-Type': 'application/json'},
+        'body': JSON.stringify({
+            'email': email
+        })
+    });
+    return result;
+}
+
 export const loginFromToken = async (token) => {
     const user = await request('/profile/me', {
         'method': 'GET',
@@ -130,6 +145,11 @@ export const loginFromToken = async (token) => {
           'Authorization': `Bearer ${token}`
         },
     });
+
+    if (user) {    
+        setUserToken(token);
+    }
+
     return userFormatter(user);
 }
 

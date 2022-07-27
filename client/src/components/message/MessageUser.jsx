@@ -10,7 +10,7 @@ const MessageUser = (props) => {
                     ? <>
                         <img src={img} alt='' className="app_message-user-img"/> {firstname} {lastname}
                     </>
-                    : 'Utilisateur anonyme'
+                    : 'Utilisateur inconnu'
             }
         </div>
     );
