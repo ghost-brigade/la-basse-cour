@@ -16,6 +16,7 @@ const RelationsPage = (props) => {
 
     const handleChangeStatusFriendship = async (friendShip, status) => {
         const friendshipUpdated = await changeStatusFriendship(friendShip.friend.id, status);
+        friendshipUpdated.status = status;
         const friendsFiltered = friends.map(friend => {
             if (friend.id !== friendshipUpdated.id) {
                 return friend;

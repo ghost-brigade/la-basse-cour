@@ -46,7 +46,7 @@ export const changeStatusFriendship = async (userId, status) => {
 
     const token = getUserToken();
 
-    return await request('/friend/status', {
+    const friendShip = await request('/friend/status', {
         'method': 'POST',
         'headers': {
           'Content-Type': 'application/json',
@@ -57,6 +57,12 @@ export const changeStatusFriendship = async (userId, status) => {
             'addresseeId': userId,
         })
     });
+
+    if (friendShip.addresseeId) {
+        return await fillFriendship(`/user/${friendShip.addresseeId}`, friendShip);
+    }
+    
+    return friendShip;
 }
 
 export const toggleFriendship = async (userId) => {
