@@ -968,3 +968,17 @@ input, select, textarea {
   background-color: var(--color_background-secondary) !important;
   border: 0 !important;
 }
+
+.app_admin-user-report {
+  width: 100%;
+  max-width: 300px;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 2em;
+}
+
+.app_admin-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}

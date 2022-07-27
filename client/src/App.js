@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from 'react';
 import CurrentUserContext from './contexts/user/CurrentUserContext';
 import RegisterPage from './pages/RegisterPage';
 import LoginEmailPage from './pages/LoginEmailPage';
+import BannedPage from './pages/BannedPage';
 
 function App() {
   return (
@@ -30,6 +31,12 @@ const AppRoutes = (props) => {
       <Route path="/login/email/:token" element={<LoginEmailPage/>}/>
       <Route path="/register" element={<RegisterPage/>}/>
       <Route path="*" element={<LoginPage/>}/>
+    </Routes>
+  }
+
+  if (currentUser && currentUser.isBanned) {
+    return <Routes>
+      <Route path="*" element={<BannedPage />}/>
     </Routes>
   }
 

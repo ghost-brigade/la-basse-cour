@@ -9,8 +9,17 @@ const find = async (id) => {
     return report;
 }
 
-const findAll = async () => {
-    let reports = (await Report.findAll());
+const findAll = async (userId) => {
+    let reports = null;
+    if (userId) {
+        reports = (await Report.findAll({where: {
+            [Op.and]: [
+                {addresseeId: userId}
+            ]
+        }}));
+    } else {
+        reports = (await Report.findAll());
+    }
 
     if(reports === null) {
         throw new Error('Reports not found');
@@ -34,6 +43,7 @@ const findAlreadyExist = async (requesterId, addresseeId, reason) => {
 
 const update = async (report) => {
     await Report.update(report, {where: {id: report.id}});
+    await report.save();
     return await find(report.id);
 }
 

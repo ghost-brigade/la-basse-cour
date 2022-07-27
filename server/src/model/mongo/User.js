@@ -10,6 +10,7 @@ const schema = new MongoFactory.Schema({
     schoolBranch: String,
     img: String,
     settings: Object,
+    isBanned: Boolean,
 });
 
 const User = new MongoFactory.model("user", schema);
