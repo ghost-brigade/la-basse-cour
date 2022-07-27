@@ -25,10 +25,52 @@ const findAll = async (id) => {
     return discussions;
 }
 
-const create = async (users, label) => {
+const findThemes = async (userId, themes, label = '') => {
+    const filters = [];
+    if (userId) {
+        filters.push({
+            [Op.not]: {
+                users: {
+                    [Op.contains]: [userId]
+                }
+            }
+        });
+    }
+    
+    let discussions = (
+        await Discussion.findAll({
+            where: {
+                [Op.and]: [
+                    ...filters,
+                    {
+                        themes: {
+                            [Op.or]: themes.map(theme => {
+                                return {[Op.contains]: [theme]}
+                            })
+                        }
+                    },
+                    {
+                        label: {
+                            [Op.like]: `%${label}%`
+                        }
+                    }
+                ]
+                
+            }
+        })
+    );
+
+    if(discussions === null) {
+        throw new Error('Discussions not found');
+    }
+    return discussions;
+}
+
+const create = async (users, label, themes) => {
     return await Discussion.create({
         'users': users,
         'label': label,
+        'themes': themes,
     });
 }
 
@@ -43,4 +85,4 @@ const remove = async (discussion) => {
     return 'Removed';
 }
 
-export { create, findAll, find, update, remove };
+export { create, findAll, findThemes, find, update, remove };
