@@ -16,6 +16,7 @@
     "react-textarea-autosize": "^8.3.4",
     "react-tracking": "^9.2.0",
     "recharts": "^2.1.13",
+    "serve": "^14.0.1",
     "socket.io-client": "^4.5.1",
     "web-vitals": "^2.1.4"
   },
@@ -23,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serve": "serve -s build"
   },
   "eslintConfig": {
     "extends": [

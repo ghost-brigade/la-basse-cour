@@ -11,6 +11,7 @@ import profileRouter from "./profile.js";
 import discussionRouter from "./discussion.js";
 import dataRouter from "./data.js";
 import adminRouter from "./admin.js";
+import BannedMiddleware from "../middleware/BannedMiddleware.js";
 
 const router = express.Router();
 

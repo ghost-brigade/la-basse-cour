@@ -7,7 +7,7 @@ const BannedPage = () => {
                 <img className="app_icon-site" width="50px" height="50px" src={icon_site} alt=""/>
             </div>
             <div className="app_main-content">
-                <h1>Me connecter</h1>
+                <h1>Vilain, c'est interdit pour toi</h1>
                 <p>Vous êtes banni !</p>
             </div>
         </main>
