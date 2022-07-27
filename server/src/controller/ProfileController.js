@@ -79,7 +79,7 @@ const report = async (req, res) => {
         return Response.unprocessableEntity(req, res, "You can't report yourself");
     }
 
-    const reportAlreadyExists = await ReportRepository.findAlreadyExist(req.user.id, req.body.addresseeId, reason);
+    const reportAlreadyExists = await ReportRepository.findAlreadyExist(req.user.id, req.body.addresseeId, req.body.reason);
 
     if(reportAlreadyExists) {
         return Response.unprocessableEntity(req, res, "You already reported this user for this reason");

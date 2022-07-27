@@ -1,14 +1,17 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DiscussionContext from "../../contexts/discussion/DiscussionContext";
+import ModalContext from "../../contexts/modal/ModalContext";
 import CurrentUserContext from "../../contexts/user/CurrentUserContext";
 import { getPrivateDiscussion } from "../../utils/discussion_management";
 import { blockUser, unblockUser } from "../../utils/relation_management";
 import { getUserTitle } from "../../utils/user_management";
 import OptionsWrapper from "../wrappers/OptionsWrapper";
+import UserSignal from "./UserSignal";
 
 const UserPreview = (props) => {
     const navigate = useNavigate();
+    const {setModal} = useContext(ModalContext);
     const {currentUser} = useContext(CurrentUserContext);
     const {setSelectedDiscussion} = useContext(DiscussionContext);
     const {user} = props;
@@ -38,6 +41,16 @@ const UserPreview = (props) => {
         }
     }
 
+    const handleSignalUser = () => {
+        setModal({
+            'title': 'Signaler',
+            'content': <UserSignal />,
+            'data': {
+                'addresseeId': user.id
+            }
+        });
+    }
+
     if (!user) {
         return <></>;
     }
@@ -53,7 +66,7 @@ const UserPreview = (props) => {
                 <OptionsWrapper>
                     <ul>
                         { props.options ? props.options : '' }
-                        <li className="app_content-delete">
+                        <li className="app_content-delete" onClick={handleSignalUser}>
                             <i className="fa fa-bullhorn"/> Signaler
                         </li>
                         {

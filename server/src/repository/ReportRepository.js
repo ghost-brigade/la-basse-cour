@@ -37,4 +37,4 @@ const update = async (report) => {
     return await find(report.id);
 }
 
-export { create, findAll, find, update };
+export { create, findAll, find, findAlreadyExist, update };

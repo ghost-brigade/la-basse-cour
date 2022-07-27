@@ -4,6 +4,7 @@ import DiscussionsPage from '../pages/DiscussionsPage';
 import ProfilePage from '../pages/ProfilePage';
 import RelationsPage from '../pages/RelationsPage';
 import RelationsAddPage from '../pages/RelationAddPage';
+import AdminPage from '../pages/AdminPage';
 import DiscussionAddPage from '../pages/DiscussionAddPage';
 
 export const appPages = [
@@ -56,9 +57,18 @@ export const appPages = [
         id: 'statistics', 
         path: '/statistics', 
         label: 'Statistiques',
-        iconClassNames: ['fa fa-bar-chart'], 
+        iconClassNames: ['fa fa-pie-chart'], 
         element: <StatisticsPage />,
         visibleMenu: (user) => isGranted(user, ['admin']),
+        userAccess: (user) => isConnected(user) && isGranted(user, ['admin']),
+    },
+    {
+        id: 'admin', 
+        path: '/admin', 
+        label: 'Administration',
+        iconClassNames: ['fa fa-shield'], 
+        element: <AdminPage />,
+        visibleMenu: () => true,
         userAccess: (user) => isConnected(user) && isGranted(user, ['admin']),
     },
     {
