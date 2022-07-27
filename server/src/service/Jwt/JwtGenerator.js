@@ -7,7 +7,7 @@ const createToken = async (user) => {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        roles: user.roles,
+        roles: user.roles
     };
     return jwt.sign(payload, process.env.JWT_SECRET || env.secret, {
         expiresIn: "1y",
