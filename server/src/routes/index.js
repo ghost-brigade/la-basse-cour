@@ -9,6 +9,7 @@ import userRouter from "./user.js";
 import friendRouter from "./friend.js";
 import profileRouter from "./profile.js";
 import discussionRouter from "./discussion.js";
+import dataRouter from "./data.js";
 import adminRouter from "./admin.js";
 import BannedMiddleware from "../middleware/BannedMiddleware.js";
 
@@ -19,13 +20,13 @@ router.use(cors({'origin': true, 'credentials': true}));
 
 router.use(securityRouter);
 
-router.use(AuthentificationMiddleware, BannedMiddleware);
-router.use('/user', userRouter);
-router.use('/message', messageRouter);
-router.use('/friend', friendRouter);
-router.use('/profile', profileRouter);
-router.use('/discussion', discussionRouter);
-router.use('/admin', hasRolesAdmin, adminRouter);
+router.use('/user', AuthentificationMiddleware, userRouter);
+router.use('/message', AuthentificationMiddleware, messageRouter);
+router.use('/friend', AuthentificationMiddleware, friendRouter);
+router.use('/profile', AuthentificationMiddleware, profileRouter);
+router.use('/discussion', AuthentificationMiddleware, discussionRouter);
+router.use('/data', AuthentificationMiddleware, hasRolesAdmin, dataRouter);
+router.use('/admin', AuthentificationMiddleware, hasRolesAdmin, adminRouter);
 
 router.get('*', async (req, res) => {
     return Response.notFound(req, res, "Page not found");

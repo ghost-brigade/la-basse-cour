@@ -127,7 +127,7 @@ export const getDiscussionsTheme = async (filters) => {
 export const getPrivateDiscussion = async (currentUser, userToId) => {
     const token = getUserToken();
 
-    return await request('/discussion/create', {
+    const newDiscussion = await request('/discussion/create', {
         'method': 'POST',
         'headers': {
           'Content-Type': 'application/json',
@@ -137,12 +137,14 @@ export const getPrivateDiscussion = async (currentUser, userToId) => {
             'users': [currentUser.id, userToId]
         })
     });
+
+    return await discussionFormatter(newDiscussion);
 }
 
 export const createDiscussion = async (discussion) => {
     const token = getUserToken();
 
-    return await request('/discussion/create', {
+    const newDiscussion = await request('/discussion/create', {
         'method': 'POST',
         'headers': {
           'Content-Type': 'application/json',
@@ -150,6 +152,8 @@ export const createDiscussion = async (discussion) => {
         },
         'body': JSON.stringify(discussion)
     });
+    
+    return await discussionFormatter(newDiscussion);
 }
 
 export const getDiscussionTitle = (discussion, currentUser) => {
